@@ -1,4 +1,4 @@
-C = g++
+CC = g++
 CPPFLAGS = -Iinclude -MMD -MP
 CFLAGS = -g -std=c++2a -Wall
 
@@ -14,7 +14,7 @@ BIN := $(BIN_DIR)/exe
 default: $(BIN)
 
 run:
-		./bin/exe
+	./bin/exe
 
 $(BIN): $(OBJ)
 		$(CC) -o $@ $^ 
