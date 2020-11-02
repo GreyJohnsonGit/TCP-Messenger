@@ -1,7 +1,8 @@
-#include "Dakota.h"
+#include "HandshakeMessage.h"
+#include "MessageType.h"
+#include <iostream>
 
 int main() {
-	Dakota *him = new Dakota("Dakota");
-	him->print();
-    	return 0;
+	std::cout << "Hello Network\n";
+	return 0;
 }
