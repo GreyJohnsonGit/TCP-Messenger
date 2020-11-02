@@ -3,4 +3,4 @@ project(TorrentialBits)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(TorrentialBits src/Socket.cpp src/Client.cpp src/main.cpp)
+add_executable(TorrentialBits src/main.cpp)
