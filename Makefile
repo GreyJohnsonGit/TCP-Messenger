@@ -24,6 +24,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 clean:
 		rm -rf $(OBJ_DIR)/*
-			rm -rf $(BIN_DIR)/*
+		rm -rf $(BIN_DIR)/*
 
 -include $(OBJ:.o=.d)
