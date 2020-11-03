@@ -6,7 +6,7 @@
 namespace TorrentialBits {
     class IMessage {
         public:
-            virtual const std::vector<char> GetMessageData() const = 0;
+            virtual const std::vector<char> GetRawMessage() const = 0;
     };
 }
 

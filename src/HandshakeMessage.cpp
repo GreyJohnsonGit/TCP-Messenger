@@ -1,54 +1,44 @@
 #include "HandshakeMessage.h"
-
+#include "Utility.h"
 #include <string>
 
-namespace TB = TorrentialBits;
+using namespace TorrentialBits;
 
 const int HEADER_WIDTH = 18;
 const int ZERO_WIDTH = 10;
 const int ID_WIDTH = 4;
 const int HANDSHAKE_WIDTH = HEADER_WIDTH + ZERO_WIDTH + ID_WIDTH;
 
-TB::HandshakeMessage::HandshakeMessage(unsigned int _id) {
+HandshakeMessage::HandshakeMessage(unsigned int _id) {
     header = HANDSHAKE_HEADER;
     zeros = std::vector<char>(ZERO_WIDTH);
     fill(zeros.begin(), zeros.end(), 0);
     peerId = _id;
 }
 
-TB::HandshakeMessage::HandshakeMessage(std::vector<char> _data) {
+HandshakeMessage::HandshakeMessage(std::vector<char> _data) {
     header = std::string(_data.begin(), _data.begin() + HEADER_WIDTH);
     zeros = std::vector<char>(_data.begin() + HEADER_WIDTH, _data.begin() + HEADER_WIDTH + ZERO_WIDTH);
-    unsigned int id = 0;
-    for (int i = ID_WIDTH; i > 0; i--) {
-        id <<= 8;
-        char byte = _data[HANDSHAKE_WIDTH - i];
-        id += byte;
-    }
-    peerId = id;
+    peerId = Utility::UintToCharVector(std::vector<char>(_data.begin() + HEADER_WIDTH + ZERO_WIDTH, _data.end()));
 }
 
-const std::vector<char> TB::HandshakeMessage::GetMessageData() const {
+const std::vector<char> HandshakeMessage::GetRawMessage() const {
+    auto id = Utility::UintToCharVector(peerId);
+
     auto data = std::vector<char>(header.begin(), header.end());
     data.insert(data.end(), zeros.begin(), zeros.end());
-    data.resize(HANDSHAKE_WIDTH);
-    unsigned int id = peerId;
-    for (int i = 0; i < ID_WIDTH; i++) {
-        char byte = id & 255;
-        data[HANDSHAKE_WIDTH - i - 1] = byte;
-        id >>= 8;
-    }
+    data.insert(data.end(), id.begin(), id.end());
     return data;
 }
 
-const std::string& TB::HandshakeMessage::GetHeader() const {
+const std::string& HandshakeMessage::GetHeader() const {
     return header;
 }
 
-const std::vector<char>& TB::HandshakeMessage::GetZeros() const {
+const std::vector<char>& HandshakeMessage::GetZeros() const {
     return zeros;
 }
 
-int TB::HandshakeMessage::GetPeerId() const {
+int HandshakeMessage::GetPeerId() const {
     return peerId;
 }

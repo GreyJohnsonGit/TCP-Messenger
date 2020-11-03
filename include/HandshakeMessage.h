@@ -2,7 +2,6 @@
 #define TB_HANDSHAKEMESSAGE
 
 #include "IMessage.h"
-
 #include <string>
 
 namespace TorrentialBits {
@@ -13,7 +12,7 @@ namespace TorrentialBits {
             HandshakeMessage(unsigned int _id);
             HandshakeMessage(std::vector<char> _data);
             
-            const std::vector<char> GetMessageData() const;
+            const std::vector<char> GetRawMessage() const;
 
             const std::string& GetHeader() const;
             const std::vector<char>& GetZeros() const;
