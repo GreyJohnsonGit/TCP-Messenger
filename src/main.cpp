@@ -10,6 +10,7 @@
 #include "Utility.h"
 #include "IMessage.h"
 #include "Utility.h"
+#include "Logger.h"
 #endif
 
 #include <cstdio>
