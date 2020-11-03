@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include <ctime>
 #include <chrono>
 #include <iostream>
 #include <sstream>
@@ -96,7 +97,8 @@ void Logger::WriteToFile(unsigned int writerId, std::string message) {
     fileNameBuilder << "log_peer_" << writerId << ".log";
     std::string filename = fileNameBuilder.str();
 
-    int time = 1159;
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(now);
 
-    std::cout << filename << " - [" << time << "]:" << message << std::endl;
+    std::cout << filename << " - [" << std::string(std::ctime(&time)).substr(0, 24) << "]:" << message << std::endl;
 }
