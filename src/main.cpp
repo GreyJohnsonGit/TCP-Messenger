@@ -2,6 +2,16 @@
 // Created by renne_000 on 10/26/2020.
 //
 
+#define UNNECESSARY_INCLUDES "To Show that compilation works"
+
+#ifdef UNNECESSARY_INCLUDES
+#include "HandshakeMessage.h"
+#include "Message.h"
+#include "Utility.h"
+#include "IMessage.h"
+#include "Utility.h"
+#endif
+
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
