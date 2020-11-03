@@ -7,6 +7,7 @@
 namespace TorrentialBits {
     class Message : public IMessage {
         public:
+            Message(MessageType _type);
             Message(MessageType _type, const std::vector<char>& _body);
             Message(const std::vector<char>& _message);
 

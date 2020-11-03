@@ -6,6 +6,11 @@ using namespace TorrentialBits;
 const int LENGTH_WIDTH = 4;
 const int TYPE_WIDTH = 1;
 
+Message::Message(MessageType _type) {
+    type = _type;
+    body = std::vector<char>(0);
+}
+
 Message::Message(MessageType _type, const std::vector<char>& _body) {
     type = _type;
     body = _body;
