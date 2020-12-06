@@ -1,6 +1,23 @@
 #include "Peer.h"
+#include <fstream>
 
 using namespace TorrentialBits;
+
+std::vector<Peer> Peer::CreatePeersFromFile(std::string fileName) {
+    std::ifstream file = std::ifstream(fileName);
+
+    if (!file.is_open())
+        throw "PeerInfo.cfg not found";
+
+    std::vector<Peer> peers;
+    std::string peerString;
+    while (std::getline(file, peerString)) {
+        peers.push_back(Peer(peerString));
+    }
+
+    file.close();
+    return peers;
+}
 
 Peer::Peer(std::string peerString) {
     size_t startOfVar = 0;

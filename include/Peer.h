@@ -2,6 +2,7 @@
 #define TB_PEER
 
 #include <string>
+#include <vector>
 
 namespace TorrentialBits {
     class Peer {
@@ -13,6 +14,8 @@ namespace TorrentialBits {
             size_t GetListeningPort();
             bool HasFile();
 
+            static std::vector<Peer> CreatePeersFromFile(std::string fileName);
+            
         private:
             int peerId;
             std::string hostName;
