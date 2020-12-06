@@ -11,7 +11,7 @@ namespace TorrentialBits {
             size_t GetNumberOfPreferredNeighbors();
             size_t GetUnchokingInterval();
             size_t GetOptimisticUnchokingInterval();
-            std::string GetFileName();
+            const std::string& GetFileName();
             size_t GetFileSize();
             size_t GetPieceSize();
 

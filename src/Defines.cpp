@@ -33,7 +33,7 @@ size_t Defines::GetOptimisticUnchokingInterval() {
     return std::stoul(table["OptimisticUnchokingInterval"]);
 }
 
-std::string Defines::GetFileName() {
+const std::string& Defines::GetFileName() {
     return table["FileName"];
 }
 
