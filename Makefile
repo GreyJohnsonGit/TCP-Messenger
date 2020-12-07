@@ -1,6 +1,6 @@
 CC = g++
-CPPFLAGS = -Iinclude -MMD -MP
-CFLAGS = -g -std=c++2a -Wall
+CPPFLAGS = -Iinclude -MMD -MP -pthread -std=c++2a
+CFLAGS = -g -Wall
 
 SRC_DIR = src
 OBJ_DIR = obj
@@ -17,7 +17,7 @@ run:
 	./bin/exe
 
 $(BIN): $(OBJ)
-		$(CC) -o $@ $^ 
+		$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 		$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
