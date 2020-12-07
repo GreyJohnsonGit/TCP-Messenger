@@ -19,3 +19,15 @@ unsigned int Utility::UintToCharVector(std::vector<char> value) {
     }
     return converted;
 }
+
+std::vector<char> Utility::StringToCharVector(std::string value) {
+    std::vector<char> buffer;
+    buffer.insert(buffer.end(), value.begin(), value.end());
+    return buffer;
+}
+
+std::string Utility::StringToCharVector(std::vector<char> value) {
+    std::string buffer;
+    buffer.insert(buffer.end(), value.begin(), value.end());
+    return buffer;
+}
