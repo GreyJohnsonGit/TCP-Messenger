@@ -9,6 +9,6 @@ std::thread Server::SpawnThread() {
 }
 
 void Server::InitializeServer() {
-    size_t peerId = peer.GetPeerId();
-    std::cout << peerId << std::endl;
+    size_t portNumber = peer.GetListeningPort();
+
 }

@@ -6,6 +6,7 @@
 #include "PeerClient.h"
 #include "Utility.h"
 #include "Server.h"
+#include "Client.h"
 #include <iostream>
 #include <string>
 #include <thread>
@@ -29,6 +30,14 @@ int main(int argc, char *argv[]) {
     std::thread serverThread = peerServer->SpawnThread();
 
     serverThread.join();
+
+    //TODO: Handle all choking/unchoking logic
+
+    for(PeerClient previousPeer : peerClients) {
+        if(previousPeer.GetPeerId() == peerId) break;
+        Client *client = new Client(peer, previousPeer);
+        client->Connect();
+    }
 
 //    try {
 //        Defines defines = Defines("Common.cfg");

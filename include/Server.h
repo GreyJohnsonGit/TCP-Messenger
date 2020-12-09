@@ -12,6 +12,8 @@ namespace TorrentialBits {
         Server(PeerClient _peer) : peer(_peer) {}
         std::thread SpawnThread();
         void InitializeServer();
+        void Connect();
+        void Disconnect();
 
     private:
         PeerClient peer;
