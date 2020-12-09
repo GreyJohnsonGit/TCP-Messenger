@@ -15,6 +15,8 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+//TODO: clean up imports above
+
 using namespace TorrentialBits;
 
 void Client::Connect() {
@@ -35,7 +37,7 @@ void Client::Connect() {
 
     peer.SetRemoteFileDescriptor(fileDescriptor);
 
-    //TODO: PeerToPeerController
+    //TODO: PeerToPeerController thread
 
     //TODO: Send handshake
 }

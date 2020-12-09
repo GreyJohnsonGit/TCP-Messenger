@@ -8,15 +8,15 @@
 
 namespace TorrentialBits {
     class Server {
-    public:
-        Server(PeerClient _peer) : peer(_peer) {}
-        std::thread SpawnThread();
-        void InitializeServer();
-        void Connect();
-        void Disconnect();
+        public:
+            Server(PeerClient _peer) : peer(_peer) {}
+            std::thread SpawnThread();
+            void Start();
+            void Shutdown();
 
-    private:
-        PeerClient peer;
+        private:
+            PeerClient peer;
+            int remotePeer;
     };
 }
 #endif
