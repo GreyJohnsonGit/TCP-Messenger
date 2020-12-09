@@ -9,6 +9,7 @@ namespace TorrentialBits {
     class PeerClient {
         public:
             static std::vector<PeerClient> CreatePeersFromFile(std::string fileName, Defines* _defines);
+            static PeerClient GetPeer(int peerId, std::vector<PeerClient> peers);
             PeerClient(std::string peerString, Defines* _defines);
 
             void Connect();

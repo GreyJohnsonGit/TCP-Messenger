@@ -28,6 +28,16 @@ std::vector<PeerClient> PeerClient::CreatePeersFromFile(std::string fileName, De
     return peers;
 }
 
+PeerClient PeerClient::GetPeer(int peerId, std::vector<PeerClient> peers) {
+    for (auto &peer : peers) {
+        if (peer.GetPeerId() == peerId)
+            return peer;
+    }
+
+    std::cout << "This peerId is not in the allowed list, please try with a valid Id" << std::endl;
+    exit(-1);
+}
+
 PeerClient::PeerClient(std::string peerString, Defines* _defines) {
     defines = _defines;
     fileDescriptor = -1;
@@ -37,7 +47,7 @@ PeerClient::PeerClient(std::string peerString, Defines* _defines) {
         startOfVar = startOfVar + lengthOfVar + 1;
         lengthOfVar = peerString.find(' ', startOfVar) - startOfVar;
     };
-    
+
     peerId = stoi(peerString.substr(startOfVar, lengthOfVar));
     next();
     hostName = peerString.substr(startOfVar, lengthOfVar);
