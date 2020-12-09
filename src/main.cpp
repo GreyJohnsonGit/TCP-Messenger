@@ -1,7 +1,3 @@
-//
-// Created by renne_000 on 10/26/2020.
-//
-
 #include "Defines.h"
 #include "PeerClient.h"
 #include "Utility.h"
@@ -29,15 +25,18 @@ int main(int argc, char *argv[]) {
     Server *peerServer = new Server(peer);
     std::thread serverThread = peerServer->SpawnThread();
 
-    serverThread.join();
-
     //TODO: Handle all choking/unchoking logic
 
     for(PeerClient previousPeer : peerClients) {
+        std::cout << "Trying to create a client, current peer is: " << peerId << " and the previous is: " << previousPeer.GetPeerId() << "with listening port: " << previousPeer.GetListeningPort() << std::endl;
         if(previousPeer.GetPeerId() == peerId) break;
+
+
         Client *client = new Client(peer, previousPeer);
         client->Connect();
     }
+
+    serverThread.join();
 
 //    try {
 //        Defines defines = Defines("Common.cfg");

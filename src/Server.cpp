@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "PeerClient.h"
+#include "PeerMessageController.h"
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -47,16 +48,21 @@ void Server::Start() {
 
     while(true) {
         int addressLength = sizeof(address);
+        std::cout << "Waiting for a connection..." << std::endl;
         remotePeer = accept(serverFileDescriptor, (struct sockaddr*) &address, (socklen_t*) &addressLength);
 
         if (remotePeer == -1)
             throw "Socket Connection Acceptance Failed";
         std::cout << "Socket Accepted Connection" << std::endl;
 
-
         //TODO: PeerToPeerController thread
+        PeerMessageController *controller = new PeerMessageController(peer, remotePeer);
+        std::thread controllerThread = controller->SpawnThread();
 
-        //TODO: Send handshake
+        //TODO: Send Handshake
+        std::string message = "This is a handshake from: " + peer.GetPeerId();
+        if (send(remotePeer, message.c_str(), message.length() + 1, 0) == -1)
+            throw "Socket Send Failed";
     }
 
 }

@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "PeerMessageController.h"
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -20,11 +21,12 @@
 using namespace TorrentialBits;
 
 void Client::Connect() {
+    std::cout << "Trying to connect to a client on port: " << remotePeer.GetListeningPort() << std::endl;
     fileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (fileDescriptor == -1)
         throw "Socket File Descriptor Failed Creating Client";
 
-    struct hostent *server = gethostbyname(remotePeer.GetHostName().c_str());
+    struct hostent *server = gethostbyname("127.0.0.1");
     if (server == NULL)
         throw "Could Not Find Server";
 
@@ -37,9 +39,16 @@ void Client::Connect() {
 
     peer.SetRemoteFileDescriptor(fileDescriptor);
 
-    //TODO: PeerToPeerController thread
+    std::cout << "Trying to send things" << std::endl;
 
-    //TODO: Send handshake
+    //TODO: PeerToPeerController thread
+    PeerMessageController *controller = new PeerMessageController(peer, fileDescriptor);
+    std::thread controllerThread = controller->SpawnThread();
+
+    //TODO: Send Handshake
+    std::string message = "This is a handshake from: " + peer.GetPeerId();
+    if (send(fileDescriptor, message.c_str(), message.length() + 1, 0) == -1)
+        throw "Socket Send Failed";
 }
 
 void Client::Disconnect() {
