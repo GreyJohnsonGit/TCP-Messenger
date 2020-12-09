@@ -28,6 +28,16 @@ std::vector<PeerClient> PeerClient::CreatePeersFromFile(std::string fileName, De
     return peers;
 }
 
+PeerClient PeerClient::GetPeer(int peerId, std::vector<PeerClient> peers) {
+    for (auto &peer : peers) {
+        if (peer.GetPeerId() == peerId)
+            return peer;
+    }
+
+    std::cout << "This peerId is not in the allowed list, please try with a valid Id" << std::endl;
+    exit(-1);
+}
+
 PeerClient::PeerClient(std::string peerString, Defines* _defines) {
     defines = _defines;
     fileDescriptor = -1;
@@ -37,7 +47,7 @@ PeerClient::PeerClient(std::string peerString, Defines* _defines) {
         startOfVar = startOfVar + lengthOfVar + 1;
         lengthOfVar = peerString.find(' ', startOfVar) - startOfVar;
     };
-    
+
     peerId = stoi(peerString.substr(startOfVar, lengthOfVar));
     next();
     hostName = peerString.substr(startOfVar, lengthOfVar);
@@ -47,37 +57,41 @@ PeerClient::PeerClient(std::string peerString, Defines* _defines) {
     hasFile = peerString.at(startOfVar) == '1';
 }
 
-void PeerClient::Connect() {
-    fileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
-    if (fileDescriptor == -1)
-        throw "Socket File Descriptor Failed";
+//void PeerClient::Connect() {
+//    fileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
+//    if (fileDescriptor == -1)
+//        throw "Socket File Descriptor Failed";
+//
+//    struct hostent *server = gethostbyname("127.0.0.1");
+//    if (server == NULL)
+//        throw "Could Not Find Server";
+//
+//    struct sockaddr_in serverAddress = {};
+//    serverAddress.sin_family = AF_INET;
+//    bcopy((char*)server->h_addr, (char*)&serverAddress.sin_addr.s_addr, server->h_length);
+//    serverAddress.sin_port = htons(listeningPort);
+//    if (connect(fileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
+//        throw "Failed to Connect";
+//}
+//
+//void PeerClient::Disconnect() {
+//    close(fileDescriptor);
+//    fileDescriptor = -1;
+//}
 
-    struct hostent *server = gethostbyname("127.0.0.1");
-    if (server == NULL)
-        throw "Could Not Find Server";
-
-    struct sockaddr_in serverAddress = {};
-    serverAddress.sin_family = AF_INET;
-    bcopy((char*)server->h_addr, (char*)&serverAddress.sin_addr.s_addr, server->h_length);
-    serverAddress.sin_port = htons(listeningPort);
-    if (connect(fileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
-        throw "Failed to Connect";
-}
-
-void PeerClient::Disconnect() {
-    close(fileDescriptor);
-    fileDescriptor = -1;
-}
-
-std::vector<char> PeerClient::Send(std::vector<char> message) {
-    if (write(fileDescriptor, message.data(), message.size()) == -1)
+std::vector<char> PeerClient::Send(std::vector<char> message, int outputFileDescriptor) {
+    if (write(outputFileDescriptor, message.data(), message.size()) == -1)
         throw "Failed to Write Message";
 
     std::vector<char> buffer(defines->GetPieceSize() + 128);
-    if (read(fileDescriptor, buffer.data(), buffer.size() - 1) == -1)
+    if (read(outputFileDescriptor, buffer.data(), buffer.size() - 1) == -1)
         throw "Failed to Read Response";
 
     return buffer;
+}
+
+void PeerClient::SetRemoteFileDescriptor(int _remoteFileDescriptor) {
+    remoteFileDescriptor = _remoteFileDescriptor;
 }
 
 int PeerClient::GetPeerId() {

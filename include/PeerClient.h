@@ -9,12 +9,14 @@ namespace TorrentialBits {
     class PeerClient {
         public:
             static std::vector<PeerClient> CreatePeersFromFile(std::string fileName, Defines* _defines);
+            static PeerClient GetPeer(int peerId, std::vector<PeerClient> peers);
             PeerClient(std::string peerString, Defines* _defines);
 
-            void Connect();
-            void Disconnect();
-            std::vector<char> Send(std::vector<char> message);
+//            void Connect();
+//            void Disconnect();
+            std::vector<char> Send(std::vector<char> message, int outputFileDescriptor);
 
+            void SetRemoteFileDescriptor(int _remoteFileDescriptor);
             int GetPeerId();
             const std::string& GetHostName();
             size_t GetListeningPort();
@@ -26,6 +28,7 @@ namespace TorrentialBits {
             size_t listeningPort;
             int peerId;
             int fileDescriptor;
+            int remoteFileDescriptor;
             bool hasFile;
 
     };
