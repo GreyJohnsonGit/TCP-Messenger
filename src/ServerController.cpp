@@ -4,6 +4,9 @@
 
 using namespace TorrentialBits;
 
+ServerController::ServerController(int _peerId, PeerInfo &_peerInfo, const Defines &_defines) 
+    : peerId(_peerId), peerInfo(_peerInfo), defines(_defines) {}
+
 std::vector<char> ServerController::ProcessRequest(std::vector<char> request) {
     if (request.size() < 5)
         throw "Malformed request";
@@ -42,26 +45,37 @@ std::vector<char> test() {
 }
 
 std::vector<char> ServerController::Choke(std::vector<char> &request) {
-    return test();
+    peerInfo.SetIsServerChoked(peerId, true);
+    return std::vector<char>(0);
 }
+
 std::vector<char> ServerController::Unchoke(std::vector<char> &request)  {
-    return test();
+    peerInfo.SetIsServerChoked(peerId, false);
+    return std::vector<char>(0);
 }
+
 std::vector<char> ServerController::Interested(std::vector<char> &request)  {
-    return test();
+    peerInfo.SetIsPeerIntereseted(peerId, true);
+    return std::vector<char>(0);
 }
+
 std::vector<char> ServerController::Disinterested(std::vector<char> &request)  {
-    return test();
+    peerInfo.SetIsPeerIntereseted(peerId, false);
+    return std::vector<char>(0);
 }
+
 std::vector<char> ServerController::Have(std::vector<char> &request)  {
     return test();
 }
+
 std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
     return test();
 }
+
 std::vector<char> ServerController::Request(std::vector<char> &request)  {
     return test();
 }
+
 std::vector<char> ServerController::Piece(std::vector<char> &request)  {
     return test();
 }

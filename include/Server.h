@@ -1,3 +1,4 @@
+/*
 #ifndef TB_SERVER
 #define TB_SERVER
 
@@ -13,3 +14,4 @@ namespace TorrentialBits {
     };
 }
 #endif
+*/

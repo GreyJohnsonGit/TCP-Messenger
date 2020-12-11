@@ -12,7 +12,7 @@ void FragmentRepository::CreateFragments(int peerId) {
     std::string fileName = defines->GetFileName();
     size_t fileSize = defines->GetFileSize();
     size_t fragmentSize = defines->GetPieceSize();
-    size_t fragmentCount = fileSize / fragmentSize + (fileSize % fragmentSize == 0 ? 0 : 1);
+    size_t fragmentCount = defines->GetPieceCount();
 
     std::stringstream directoryBuilder;
     directoryBuilder << "peer_" << peerId << "/";
@@ -48,7 +48,7 @@ void FragmentRepository::MergeFragments(int peerId) {
     std::string fileName = defines->GetFileName();
     size_t fileSize = defines->GetFileSize();
     size_t fragmentSize = defines->GetPieceSize();
-    size_t fragmentCount = fileSize / fragmentSize + (fileSize % fragmentSize == 0 ? 0 : 1);
+    size_t fragmentCount = defines->GetPieceCount();
 
     std::stringstream directoryBuilder;
     directoryBuilder << "peer_" << peerId << "/";
@@ -83,7 +83,7 @@ void FragmentRepository::DeleteFragments(int peerId) {
     std::string fileName = defines->GetFileName();
     size_t fileSize = defines->GetFileSize();
     size_t fragmentSize = defines->GetPieceSize();
-    size_t fragmentCount = fileSize / fragmentSize + (fileSize % fragmentSize == 0 ? 0 : 1);
+    size_t fragmentCount = defines->GetPieceCount();
 
     std::stringstream directoryBuilder;
     directoryBuilder << "peer_" << peerId << "/";

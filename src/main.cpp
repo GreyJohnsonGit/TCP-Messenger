@@ -23,10 +23,9 @@ int main(int argc, char *argv[]) {
         PeerInfo peerInfo("PeerInfo0.cfg");
         FragmentRepository repo(&defines);
         
-        if (peerInfo.HasFile(peerId))
+        if (peerInfo.GetHasFile(peerId))
             repo.CreateFragments(peerId);
 
-        ServerController controller;
         
         /*
         Defines defines = Defines("Common.cfg");

@@ -44,3 +44,9 @@ size_t Defines::GetFileSize() {
 size_t Defines::GetPieceSize() {
     return std::stoul(table["PieceSize"]);
 }
+
+size_t Defines::GetPieceCount() {
+    size_t fileSize = GetFileSize();
+    size_t pieceSize = GetPieceSize();
+    return (fileSize / pieceSize) + (fileSize % pieceSize ? 1 : 0);
+}
