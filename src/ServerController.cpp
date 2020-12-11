@@ -1,5 +1,6 @@
 #include "ServerController.h"
 #include "Utility.h"
+#include "Logger.h"
 
 using namespace TorrentialBits;
 
@@ -32,30 +33,40 @@ std::vector<char> ServerController::ProcessRequest(std::vector<char> &request) {
 }
 
 std::vector<char> ServerController::Choke(std::vector<char> &request) {
+    Logger logger;
+    logger.LogChoked(serverId, peerId);
     peerInfo->SetChoke(peerId, serverId, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Unchoke(std::vector<char> &request)  {
+    Logger logger;
+    logger.LogUnchoked(serverId, peerId);
     peerInfo->SetChoke(peerId, serverId, false);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Interested(std::vector<char> &request)  {
+    Logger logger;
+    logger.LogInterested(serverId, peerId);
     peerInfo->SetInterested(peerId, serverId, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Disinterested(std::vector<char> &request)  {
+    Logger logger;
+    logger.LogNotInterested(serverId, peerId);
     peerInfo->SetInterested(peerId, serverId, false);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Have(std::vector<char> &request)  {
+    Logger logger;
     std::vector<char> requestPayload;
     requestPayload.insert(requestPayload.end(), request.begin() + 5, request.begin() + 9);
     uint32_t requestedIndex = Utility::UintToCharVector(requestPayload);
 
+    logger.LogHave(serverId, peerId, requestedIndex);
     peerInfo->SetPieceStatus(peerId, requestedIndex, true);
     return GenerateNoResponse();
 }
@@ -67,6 +78,7 @@ std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
 }
 
 std::vector<char> ServerController::Request(std::vector<char> &request)  {
+    Logger logger;
     std::vector<char> requestPayload;
     requestPayload.insert(requestPayload.end(), request.begin() + 5, request.begin() + 9);
     uint32_t pieceIndex = Utility::UintToCharVector(requestPayload);

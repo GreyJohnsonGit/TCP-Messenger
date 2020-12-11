@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "ServerController.h"
 #include "Utility.h"
+#include "Logger.h"
 #include <thread>
 #include <pthread.h>
 #include <vector>
@@ -60,11 +61,11 @@ void Server::StartBackgroundServer(ServerDataPackage package) {
     package.address = address;
 
     auto threads = std::vector<std::thread>();
-    for (size_t i = 0; i < package.peerInfo->GetPeerNetworkSize(); i++) {
+    for (size_t i = 0; i < package.peerInfo->GetPeerNetworkSize() - 1; i++) {
         threads.push_back(std::thread(HandleConnection, package));
     }
     
-    for (size_t i = 0; i < package.peerInfo->GetPeerNetworkSize(); i++) {
+    for (size_t i = 0; i < package.peerInfo->GetPeerNetworkSize() - 1; i++) {
         threads[i].join();
     }
 
@@ -72,8 +73,8 @@ void Server::StartBackgroundServer(ServerDataPackage package) {
 }
 
 void Server::HandleConnection(ServerDataPackage package) {
+    Logger logger;
     try {
-        std::cout << "Starting" << std::endl;
         int addressLength = sizeof(package.address);
         int newSocket = accept(package.serverFileDescriptor, (struct sockaddr*) &package.address, (socklen_t*) &addressLength);
         if (newSocket == -1)
@@ -83,8 +84,10 @@ void Server::HandleConnection(ServerDataPackage package) {
         if (read(newSocket, handshakeBuffer.data(), handshakeBuffer.size()) == -1)
                 throw "Handshake Read Failed";
 
-        uint32_t peerId = Utility::UintToCharVector(std::vector<char>(handshakeBuffer.begin() + 30, handshakeBuffer.end()));
+        uint32_t peerId = Utility::UintToCharVector(std::vector<char>(handshakeBuffer.begin() + 28, handshakeBuffer.end()));
         ServerController controller(package.serverId, peerId, package.peerInfo, package.defines, package.fragmentRepository);
+
+        logger.LogTCPConnect(package.serverId, peerId, false);
 
         while (!*package.shutdownSignal || newSocket) {
             std::vector<char> buffer = std::vector<char>(package.defines->GetPieceSize() + package.defines->GetPieceCount());
@@ -94,8 +97,6 @@ void Server::HandleConnection(ServerDataPackage package) {
                 throw "Socket Read Failed";
             if (errorCode == 0)
                 break;
-
-            std::cout << "Message recieved" << std::endl;
 
             std::vector<char> response = controller.ProcessRequest(buffer);
             if (response.size() != 0 && send(newSocket, response.data(), response.size(), 0) == -1)

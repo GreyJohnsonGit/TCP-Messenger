@@ -7,7 +7,6 @@
 namespace TorrentialBits {
     class Logger {
         public:
-            Logger();
             void LogTCPConnect(unsigned int recieverId, unsigned int neighborId, bool localOrigin);
             void LogChangeNeighbor(unsigned int recieverId, std::vector<unsigned int> neighbors);
             void LogOptimisticUnchoke(unsigned int recieverId, unsigned int neighborId);

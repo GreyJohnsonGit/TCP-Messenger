@@ -6,7 +6,6 @@
 
 using namespace TorrentialBits;
 
-Logger::Logger() {}
 void Logger::LogTCPConnect(unsigned int recieverId, unsigned int neighborId, bool localOrigin) {
     std::stringstream messageBuilder;
     messageBuilder << "Peer " << recieverId 
