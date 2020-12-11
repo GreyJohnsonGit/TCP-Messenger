@@ -109,3 +109,8 @@ void PeerInfo::SetInterested(int senderId, int recieverId, bool interested) {
     std::lock_guard<std::mutex> gaurd(entryMutex);
     peers[senderId].interestedTable[recieverId] = interested;
 }
+
+void PeerInfo::SetBitField(int senderId, std::vector<char> bitField) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    peers[senderId].bitField = bitField;
+}

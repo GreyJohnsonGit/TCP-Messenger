@@ -61,8 +61,9 @@ std::vector<char> ServerController::Have(std::vector<char> &request)  {
 }
 
 std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
-
-    return GenerateResponse(MessageType::bitfield, peerInfo->GetBitField(serverId));
+    uint32_t messageLength = Utility::UintToCharVector(std::vector<char>(request.begin(), request.begin() + 4));
+    peerInfo->SetBitField(peerId, std::vector<char>(request.begin() + 5, request.begin() + messageLength - 4));
+    return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Request(std::vector<char> &request)  {
