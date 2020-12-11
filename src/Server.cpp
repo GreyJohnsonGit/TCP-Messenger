@@ -14,19 +14,6 @@
 
 using namespace TorrentialBits;
 
-struct ServerDataPackage {
-    int serverId;
-    int serverFileDescriptor;
-    bool *shutdownSignal;
-    PeerInfo *peerInfo;
-    Defines *defines;
-    FragmentRepository *fragmentRepository;
-    struct sockaddr_in address;   
-};
-
-void StartBackgroundServer(ServerDataPackage package);
-void HandleConnection(ServerDataPackage package);
-
 Server::Server(int _serverId, PeerInfo *_peerInfo, Defines *_defines, FragmentRepository *_fragmentRepository) {
     serverId = _serverId;
     peerInfo = _peerInfo;
@@ -50,7 +37,7 @@ void Server::End() {
     primaryThread.join();
 }
 
-void StartBackgroundServer(ServerDataPackage package) {
+void Server::StartBackgroundServer(ServerDataPackage package) {
     int serverFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
     if (serverFileDescriptor == -1)
         throw "Socket File Descriptor Failed";
@@ -84,7 +71,7 @@ void StartBackgroundServer(ServerDataPackage package) {
     close(serverFileDescriptor);
 }
 
-void HandleConnection(ServerDataPackage package) {
+void Server::HandleConnection(ServerDataPackage package) {
     try {
         std::cout << "Starting" << std::endl;
         int addressLength = sizeof(package.address);
