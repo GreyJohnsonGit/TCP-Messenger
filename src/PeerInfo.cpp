@@ -29,22 +29,26 @@ PeerInfo::PeerInfo(std::string fileName, Defines& defines) {
         data.listeningPort = stoi(peerString.substr(startOfVar, lengthOfVar));
         next();
         data.hasFile = peerString.at(startOfVar) == '1';
-        data.isServerChoked = true;
-        data.isPeerChoked = true;
+        size_t bitFieldSize = (defines.GetPieceCount() / 8) + (defines.GetPieceCount() % 8 ? 1 : 0);
         if (data.hasFile) {
-            data.bitField = std::vector<char>(defines.GetPieceCount(), 1);
-            for (size_t i = 1; i <= defines.GetPieceCount() % (sizeof(char) * 8); i++) {
-                data.bitField[data.bitField.size() - i] = 0;
+            data.bitField = std::vector<char>(bitFieldSize, 255);
+            for (size_t i = 0; defines.GetPieceCount() % 8 != 0 && i < 8 - defines.GetPieceCount() % 8; i++) {
+                data.bitField[data.bitField.size() - 1] &= ~(1 << i);
             }
         }
         else {
-            data.bitField = std::vector<char>(defines.GetPieceCount(), 0);
+            data.bitField = std::vector<char>(bitFieldSize, 0);
         }
-
         peers[peerId] = data;
     }
-
     file.close();
+
+    for (auto &peer : peers) {
+        for (auto &peerIndex : peers) {
+            peer.second.chokingTable[peerIndex.first] = true;
+            peer.second.interestedTable[peerIndex.first] = false;
+        }
+    }
 }
 
 bool PeerInfo::GetPieceStatus(int peerId, uint32_t index) {
@@ -53,24 +57,16 @@ bool PeerInfo::GetPieceStatus(int peerId, uint32_t index) {
     return byte & mask;
 }
 
-bool PeerInfo::GetHasFile(int peerId) {
+bool PeerInfo::HasFile(int peerId) {
     return peers[peerId].hasFile;
 }
 
-bool PeerInfo::GetIsServerChoked(int peerId) {
-    return peers[peerId].isServerChoked;
+bool PeerInfo::IsChoking(int senderId, int recieverId) {
+    return peers[senderId].chokingTable[recieverId];
 }
 
-bool PeerInfo::GetIsPeerChoked(int peerId) {
-    return peers[peerId].isPeerChoked;
-}
-
-bool PeerInfo::GetIsServerInterested(int peerId) {
-    return peers[peerId].isServerInterested;
-}
-
-bool PeerInfo::GetIsPeerIntereseted(int peerId) {
-    return peers[peerId].isPeerInterested;
+bool PeerInfo::IsInteresting(int senderId, int recieverId) {
+    return peers[senderId].interestedTable[recieverId];
 }
 
 size_t PeerInfo::GetListeningPort(int peerId) {
@@ -94,18 +90,10 @@ void PeerInfo::SetPieceStatus(int peerId, uint32_t index, bool hasPiece) {
         byte = byte & ~mask;
 }
 
-void PeerInfo::SetIsServerChoked(int peerId, bool choked) {
-    peers[peerId].isServerChoked = choked;
+void PeerInfo::SetChoke(int senderId, int recieverId, bool choke) {
+    peers[senderId].chokingTable[recieverId] = choke;
 }
 
-void PeerInfo::SetIsPeerChoked(int peerId, bool choked) {
-    peers[peerId].isPeerChoked = choked;
-}
-
-void PeerInfo::SetIsServerInterested(int peerId, bool interested) {
-    peers[peerId].isServerInterested = interested;
-}
-
-void PeerInfo::SetIsPeerIntereseted(int peerId, bool interested) {
-    peers[peerId].isPeerInterested = interested;
+void PeerInfo::setInterested(int senderId, int recieverId, bool interested) {
+    peers[senderId].interestedTable[recieverId] = interested;
 }

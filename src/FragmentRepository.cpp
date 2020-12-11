@@ -81,8 +81,6 @@ void FragmentRepository::MergeFragments(int peerId) {
 
 void FragmentRepository::DeleteFragments(int peerId) {
     std::string fileName = defines->GetFileName();
-    size_t fileSize = defines->GetFileSize();
-    size_t fragmentSize = defines->GetPieceSize();
     size_t fragmentCount = defines->GetPieceCount();
 
     std::stringstream directoryBuilder;
@@ -94,4 +92,26 @@ void FragmentRepository::DeleteFragments(int peerId) {
         fragmentAddressBuilder << directory << i << "." << fileName;
         remove(fragmentAddressBuilder.str().c_str());
     }
+}
+
+std::vector<char> FragmentRepository::GetFragment(int peerId, uint32_t index) {
+    std::string fileName = defines->GetFileName();
+    size_t fileSize = defines->GetFileSize();
+    size_t fragmentSize = defines->GetPieceSize();
+    size_t fragmentCount = defines->GetPieceCount();
+
+    std::stringstream directoryBuilder;
+    directoryBuilder << "peer_" << peerId << "/";
+    std::string directory = directoryBuilder.str();
+
+    std::stringstream fragmentAddressBuilder;
+    fragmentAddressBuilder << directory << index + 1 << "." << fileName;
+    std::ifstream fragment(fragmentAddressBuilder.str(), std::ios_base::binary);
+
+    std::vector<char> buffer(fragmentSize);
+    if (index == fragmentCount - 1)
+        buffer = std::vector<char>(fileSize % fragmentSize);
+
+    fragment.read(buffer.data(), buffer.size());
+    return buffer;
 }

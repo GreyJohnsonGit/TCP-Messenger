@@ -12,31 +12,25 @@ namespace TorrentialBits {
             PeerInfo(std::string fileName, Defines& defines);
 
             bool GetPieceStatus(int peerId, uint32_t index);
-            bool GetHasFile(int peerId);
-            bool GetIsServerChoked(int peerId);
-            bool GetIsPeerChoked(int peerId);
-            bool GetIsServerInterested(int peerId);
-            bool GetIsPeerIntereseted(int peerId);
+            bool HasFile(int peerId);
+            bool IsChoking(int senderId, int recieverId);
+            bool IsInteresting(int senderId, int recieverId);
             size_t GetListeningPort(int peerId);
             const std::string& GetHostName(int peerId);
             const std::vector<char>& GetBitField(int peerId);
 
             void SetPieceStatus(int peerId, uint32_t index, bool hasPiece);
-            void SetIsServerChoked(int peerId, bool choked);
-            void SetIsPeerChoked(int peerId, bool choked);
-            void SetIsServerInterested(int peerId, bool interested);
-            void SetIsPeerIntereseted(int peerId, bool interested);
+            void SetChoke(int senderId, int recieverId, bool choke);
+            void setInterested(int senderId, int recieverId, bool interested);
 
         private:
             struct PeerInfoData {
                 bool hasFile;
-                bool isServerChoked;
-                bool isPeerChoked;
-                bool isServerInterested;
-                bool isPeerInterested;
                 size_t listeningPort;
                 std::string hostName;
                 std::vector<char> bitField;
+                std::map<int, bool> chokingTable;
+                std::map<int, bool> interestedTable;
             };
             std::map<int, PeerInfoData> peers;
     };
