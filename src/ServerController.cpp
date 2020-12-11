@@ -42,12 +42,12 @@ std::vector<char> ServerController::Unchoke(std::vector<char> &request)  {
 }
 
 std::vector<char> ServerController::Interested(std::vector<char> &request)  {
-    peerInfo->setInterested(peerId, serverId, true);
+    peerInfo->SetInterested(peerId, serverId, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Disinterested(std::vector<char> &request)  {
-    peerInfo->setInterested(peerId, serverId, false);
+    peerInfo->SetInterested(peerId, serverId, false);
     return GenerateNoResponse();
 }
 
@@ -61,6 +61,7 @@ std::vector<char> ServerController::Have(std::vector<char> &request)  {
 }
 
 std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
+
     return GenerateResponse(MessageType::bitfield, peerInfo->GetBitField(serverId));
 }
 

@@ -23,7 +23,7 @@ namespace TorrentialBits {
 
             void SetPieceStatus(int peerId, uint32_t index, bool hasPiece);
             void SetChoke(int senderId, int recieverId, bool choke);
-            void setInterested(int senderId, int recieverId, bool interested);
+            void SetInterested(int senderId, int recieverId, bool interested);
 
         private:
             struct PeerInfoData {
