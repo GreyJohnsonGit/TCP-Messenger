@@ -1,6 +1,6 @@
 #include "Server.h"
 #include "ServerController.h"
-#include "HandshakeMessage.h"
+#include "Utility.h"
 #include <thread>
 #include <pthread.h>
 #include <vector>
@@ -83,8 +83,8 @@ void Server::HandleConnection(ServerDataPackage package) {
         if (read(newSocket, handshakeBuffer.data(), handshakeBuffer.size()) == -1)
                 throw "Handshake Read Failed";
 
-        HandshakeMessage handshake(handshakeBuffer);
-        ServerController controller(package.serverId, handshake.GetPeerId(), package.peerInfo, package.defines, package.fragmentRepository);
+        uint32_t peerId = Utility::UintToCharVector(std::vector<char>(handshakeBuffer.begin() + 30, handshakeBuffer.end()));
+        ServerController controller(package.serverId, peerId, package.peerInfo, package.defines, package.fragmentRepository);
 
         while (!*package.shutdownSignal || newSocket) {
             std::vector<char> buffer = std::vector<char>(package.defines->GetPieceSize() + package.defines->GetPieceCount());

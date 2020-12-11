@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <thread>
-#include "Message.h"
 #include "PeerClient.h"
 
 namespace TorrentialBits {
