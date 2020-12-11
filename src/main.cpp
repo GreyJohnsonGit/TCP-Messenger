@@ -20,13 +20,17 @@ int main(int argc, char *argv[]) {
         int peerId = strtol(argv[1], nullptr, 10);
 
         Defines defines("Common0.cfg");
-        PeerInfo peerInfo("PeerInfo0.cfg");
-        FragmentRepository repo(&defines);
+        PeerInfo peerInfo("PeerInfo0.cfg", defines);
+        FragmentRepository fragmentRepository(&defines);
         
-        if (peerInfo.GetHasFile(peerId))
-            repo.CreateFragments(peerId);
+        if (peerInfo.HasFile(peerId))
+            fragmentRepository.CreateFragments(peerId);
 
-        
+        Server server(peerId, &peerInfo, &defines, &fragmentRepository);
+
+        server.Start();
+        while(true) {}
+        server.End();
         /*
         Defines defines = Defines("Common.cfg");
         std::vector<PeerClient> peerClients = PeerClient::CreatePeersFromFile("PeerInfo0.cfg", &defines);

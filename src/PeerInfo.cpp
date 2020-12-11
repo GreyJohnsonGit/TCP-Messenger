@@ -52,20 +52,24 @@ PeerInfo::PeerInfo(std::string fileName, Defines& defines) {
 }
 
 bool PeerInfo::GetPieceStatus(int peerId, uint32_t index) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     char &byte = peers[peerId].bitField[index / 8];
     char mask = 1 << (7 - index % 8);
     return byte & mask;
 }
 
 bool PeerInfo::HasFile(int peerId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     return peers[peerId].hasFile;
 }
 
 bool PeerInfo::IsChoking(int senderId, int recieverId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     return peers[senderId].chokingTable[recieverId];
 }
 
 bool PeerInfo::IsInteresting(int senderId, int recieverId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     return peers[senderId].interestedTable[recieverId];
 }
 
@@ -73,15 +77,21 @@ size_t PeerInfo::GetListeningPort(int peerId) {
     return peers[peerId].listeningPort;
 }
 
+size_t PeerInfo::GetPeerNetworkSize() {
+    return peers.size();
+}
+
 const std::string& PeerInfo::GetHostName(int peerId) {
     return peers[peerId].hostName;
 }
 
 const std::vector<char>& PeerInfo::GetBitField(int peerId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     return peers[peerId].bitField;
 }
 
 void PeerInfo::SetPieceStatus(int peerId, uint32_t index, bool hasPiece) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     char &byte = peers[peerId].bitField[index / 8];
     char mask = 1 << (7 - index % 8);
     if (hasPiece)
@@ -91,9 +101,11 @@ void PeerInfo::SetPieceStatus(int peerId, uint32_t index, bool hasPiece) {
 }
 
 void PeerInfo::SetChoke(int senderId, int recieverId, bool choke) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     peers[senderId].chokingTable[recieverId] = choke;
 }
 
 void PeerInfo::setInterested(int senderId, int recieverId, bool interested) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
     peers[senderId].interestedTable[recieverId] = interested;
 }

@@ -3,7 +3,7 @@
 
 using namespace TorrentialBits;
 
-ServerController::ServerController(int _serverId, int _peerId, PeerInfo &_peerInfo, Defines &_defines, FragmentRepository &_fragmentRepository) 
+ServerController::ServerController(int _serverId, int _peerId, PeerInfo *_peerInfo, Defines *_defines, FragmentRepository *_fragmentRepository) 
     : serverId(_serverId), peerId(_peerId), peerInfo(_peerInfo), defines(_defines), fragmentRepository(_fragmentRepository) {}
 
 std::vector<char> ServerController::ProcessRequest(std::vector<char> &request) {
@@ -32,44 +32,44 @@ std::vector<char> ServerController::ProcessRequest(std::vector<char> &request) {
 }
 
 std::vector<char> ServerController::Choke(std::vector<char> &request) {
-    peerInfo.SetChoke(peerId, serverId, true);
+    peerInfo->SetChoke(peerId, serverId, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Unchoke(std::vector<char> &request)  {
-    peerInfo.SetChoke(peerId, serverId, false);
+    peerInfo->SetChoke(peerId, serverId, false);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Interested(std::vector<char> &request)  {
-    peerInfo.setInterested(peerId, serverId, true);
+    peerInfo->setInterested(peerId, serverId, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Disinterested(std::vector<char> &request)  {
-    peerInfo.setInterested(peerId, serverId, false);
+    peerInfo->setInterested(peerId, serverId, false);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Have(std::vector<char> &request)  {
     std::vector<char> requestPayload;
-    requestPayload.insert(requestPayload.end(), request.begin() + 5, request.end());
+    requestPayload.insert(requestPayload.end(), request.begin() + 5, request.begin() + 9);
     uint32_t requestedIndex = Utility::UintToCharVector(requestPayload);
 
-    peerInfo.SetPieceStatus(peerId, requestedIndex, true);
+    peerInfo->SetPieceStatus(peerId, requestedIndex, true);
     return GenerateNoResponse();
 }
 
 std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
-    return GenerateResponse(MessageType::bitfield, peerInfo.GetBitField(serverId));
+    return GenerateResponse(MessageType::bitfield, peerInfo->GetBitField(serverId));
 }
 
 std::vector<char> ServerController::Request(std::vector<char> &request)  {
     std::vector<char> requestPayload;
-    requestPayload.insert(requestPayload.end(), request.begin() + 5, request.end());
+    requestPayload.insert(requestPayload.end(), request.begin() + 5, request.begin() + 9);
     uint32_t pieceIndex = Utility::UintToCharVector(requestPayload);
 
-    return GenerateResponse(MessageType::piece, fragmentRepository.GetFragment(serverId, pieceIndex));
+    return GenerateResponse(MessageType::piece, fragmentRepository->GetFragment(serverId, pieceIndex));
 }
 
 std::vector<char> ServerController::GenerateNoResponse() {

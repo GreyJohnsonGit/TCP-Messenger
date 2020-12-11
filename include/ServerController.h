@@ -10,15 +10,15 @@
 namespace TorrentialBits {
     class ServerController {
         public:
-            ServerController(int _serverId, int _peerId, PeerInfo &_peerInfo, Defines &_defines, FragmentRepository &_fragmentRepository);
+            ServerController(int _serverId, int _peerId, PeerInfo *_peerInfo, Defines *_defines, FragmentRepository *_fragmentRepository);
             std::vector<char> ProcessRequest(std::vector<char> &request);
 
         private:
             int serverId;
             int peerId;
-            PeerInfo& peerInfo;
-            Defines& defines;
-            FragmentRepository& fragmentRepository;
+            PeerInfo* peerInfo;
+            Defines* defines;
+            FragmentRepository* fragmentRepository;
 
 
             std::vector<char> Choke(std::vector<char> &request);

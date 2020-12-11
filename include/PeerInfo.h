@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <mutex>
 
 namespace TorrentialBits {
     class PeerInfo {
@@ -16,6 +17,7 @@ namespace TorrentialBits {
             bool IsChoking(int senderId, int recieverId);
             bool IsInteresting(int senderId, int recieverId);
             size_t GetListeningPort(int peerId);
+            size_t GetPeerNetworkSize();
             const std::string& GetHostName(int peerId);
             const std::vector<char>& GetBitField(int peerId);
 
@@ -33,6 +35,7 @@ namespace TorrentialBits {
                 std::map<int, bool> interestedTable;
             };
             std::map<int, PeerInfoData> peers;
+            std::mutex entryMutex;
     };
 }
 
