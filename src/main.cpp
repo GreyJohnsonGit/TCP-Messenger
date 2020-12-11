@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
 
         server.Start();
         server.End();
+        
+        fragmentRepository.DeleteFragments(peerId);
         /*
         Defines defines = Defines("Common.cfg");
         std::vector<PeerClient> peerClients = PeerClient::CreatePeersFromFile("PeerInfo0.cfg", &defines);
