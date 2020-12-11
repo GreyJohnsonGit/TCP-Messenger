@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <iostream>
+#include <vector>
 #define PORT 6008
 #define ALLOWED_SOCKET_CONNECTIONS 3
 #define BUFFER_SIZE 1024
@@ -27,20 +28,33 @@ int main() {
         serverAddress.sin_family = AF_INET;
         bcopy((char*)server->h_addr, (char*)&serverAddress.sin_addr.s_addr, server->h_length);
         serverAddress.sin_port = htons(PORT);
+
         if (connect(clientFileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
             throw "Failed to Connect";
 
-        std::string message = "Hi, I'm Client";
-        if (write(clientFileDescriptor, message.c_str(), message.size() + 1) == -1)
+        std::vector<char> hndshk(32, 0);
+        hndshk[30] = 3;
+        hndshk[30] = 234;
+        if (write(clientFileDescriptor, hndshk.data(), hndshk.size()) == -1)
             throw "Failed to Write Message";
 
-        char buffer[BUFFER_SIZE];
-        if (read(clientFileDescriptor, buffer, BUFFER_SIZE - 1) == -1)
+        std::cout << "Sent" << std::endl;
+
+        std::vector<char> msg {0, 0, 0, 5, 6, 0, 0, 0, 0};
+        if (write(clientFileDescriptor, msg.data(), msg.size()) == -1)
+            throw "Failed to Write Message";
+
+        std::cout << "Sent" << std::endl;
+
+        std::vector<char> buffer(1024);
+        if (read(clientFileDescriptor, buffer.data(), buffer.size()) == -1)
             throw "Failed to Read Response";
+
+        std::cout << buffer[4] << std::endl;
 
         close(clientFileDescriptor);
     }
-    catch(std::string excepetionMessage) {
+    catch(const char* excepetionMessage) {
         std::cout << excepetionMessage << std::endl;
     }
     return 0;

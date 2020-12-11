@@ -15,19 +15,15 @@ unsigned int Utility::UintToCharVector(std::vector<char> value) {
     int factor = sizeof(unsigned int)/sizeof(char);
     int converted = 0;
     for (int i = 0; i < factor; i++) {
-        converted += (unsigned int)value[i] << (8 * i);
+        converted += (unsigned int)value[i] << (8 * (factor - i - 1));
     }
     return converted;
 }
 
 std::vector<char> Utility::StringToCharVector(std::string value) {
-    std::vector<char> buffer;
-    buffer.insert(buffer.end(), value.begin(), value.end());
-    return buffer;
+    return std::vector<char>(value.begin(), value.end());
 }
 
 std::string Utility::StringToCharVector(std::vector<char> value) {
-    std::string buffer;
-    buffer.insert(buffer.end(), value.begin(), value.end());
-    return buffer;
+    return std::string(value.begin(), value.end());
 }

@@ -14,6 +14,7 @@ namespace TorrentialBits {
             const std::string& GetFileName();
             size_t GetFileSize();
             size_t GetPieceSize();
+            size_t GetPieceCount();
 
         private:
             std::unordered_map<std::string, std::string> table;

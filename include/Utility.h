@@ -13,4 +13,5 @@ namespace TorrentialBits {
             static std::string StringToCharVector(std::vector<char> value);
     };
 }
+
 #endif
