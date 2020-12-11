@@ -38,20 +38,21 @@ int main() {
         if (write(clientFileDescriptor, hndshk.data(), hndshk.size()) == -1)
             throw "Failed to Write Message";
 
-        std::cout << "Sent" << std::endl;
+        for (char i = 0; i < 5; i++) {
+            std::vector<char> msg {0, 0, 0, 5, 6, 0, 0, 0, i};
+            if (write(clientFileDescriptor, msg.data(), msg.size()) == -1)
+                throw "Failed to Write Message";
 
-        std::vector<char> msg {0, 0, 0, 5, 6, 0, 0, 0, 0};
-        if (write(clientFileDescriptor, msg.data(), msg.size()) == -1)
-            throw "Failed to Write Message";
+            std::vector<char> buffer(1024);
+            if (read(clientFileDescriptor, buffer.data(), buffer.size()) == -1)
+                throw "Failed to Read Response";
 
-        std::cout << "Sent" << std::endl;
-
-        std::vector<char> buffer(1024);
-        if (read(clientFileDescriptor, buffer.data(), buffer.size()) == -1)
-            throw "Failed to Read Response";
-
-        std::cout << buffer[4] << std::endl;
-
+            std::cout << "Block[" << (int)i << "]: ";
+            for (size_t j = 0; j < 12; j++) {
+                std::cout << buffer[j];
+            }
+            std::cout << "\n";
+        }
         close(clientFileDescriptor);
     }
     catch(const char* excepetionMessage) {

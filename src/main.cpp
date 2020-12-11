@@ -29,7 +29,6 @@ int main(int argc, char *argv[]) {
         Server server(peerId, &peerInfo, &defines, &fragmentRepository);
 
         server.Start();
-        while(true) {}
         server.End();
         /*
         Defines defines = Defines("Common.cfg");
