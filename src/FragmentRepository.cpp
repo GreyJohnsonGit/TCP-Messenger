@@ -115,3 +115,20 @@ std::vector<char> FragmentRepository::GetFragment(int peerId, uint32_t index) {
     fragment.read(buffer.data(), buffer.size());
     return buffer;
 }
+
+void FragmentRepository::PlaceFragment(int peerId, uint32_t index, std::vector<char> data) {
+    std::string fileName = defines->GetFileName();
+    size_t fileSize = defines->GetFileSize();
+    size_t fragmentSize = defines->GetPieceSize();
+    size_t fragmentCount = defines->GetPieceCount();
+
+    std::stringstream directoryBuilder;
+    directoryBuilder << "peer_" << peerId << "/";
+    std::string directory = directoryBuilder.str();
+
+    std::stringstream fragmentAddressBuilder;
+    fragmentAddressBuilder << directory << index + 1 << "." << fileName;
+    std::ofstream fragment(fragmentAddressBuilder.str(), std::ios_base::binary);
+
+    fragment.write(data.data(), data.size());
+}

@@ -16,7 +16,7 @@ namespace TorrentialBits {
             void DeleteFragments(int peerId);
 
             std::vector<char> GetFragment(int peerId, uint32_t index);
-            
+            void PlaceFragment(int peerId, uint32_t index, std::vector<char> data);
         private:
             Defines* defines;
     };
