@@ -28,6 +28,7 @@ void Client::Start() {
     package.clientId = clientId;
     package.shutdownSignal = &shutdownSignal;
     package.peer = peer;
+    package.defines = defines;
     package.remotePeerPort = remotePeerPort;
     primaryThread = std::thread(StartBackgroundClient, package);
 }
@@ -66,7 +67,7 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
-        ClientController clientController = ClientController(package.peer, package.clientId, package.remotePeerId);
+        ClientController clientController = ClientController(package.peer, package.clientId, package.remotePeerId, package.defines);
         while(!*package.shutdownSignal) {
             clientController.Startup();
         }

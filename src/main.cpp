@@ -1,3 +1,5 @@
+#include "ClientController.cpp"
+
 #include "Defines.h"
 #include "Utility.h"
 #include "Server.h"

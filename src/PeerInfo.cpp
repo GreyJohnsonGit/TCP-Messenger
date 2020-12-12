@@ -60,6 +60,10 @@ bool PeerInfo::GetPieceStatus(int peerId, uint32_t index) {
     return byte & mask;
 }
 
+std::map<int, bool> PeerInfo::GetInterestedTable(int peerId) {
+    return peers[peerId].interestedTable;
+}
+
 bool PeerInfo::HasFile(int peerId) {
     std::lock_guard<std::mutex> gaurd(entryMutex);
     return peers[peerId].hasFile;
