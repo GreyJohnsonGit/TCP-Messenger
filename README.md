@@ -1,5 +1,16 @@
 # TorrentialBits
 
+## Accreditation:
+
+Dakota:
+    Client, ClientController
+
+Grey:
+    Server, ServerController, PeerInfo, MessageType, Logger, Profiler, FragmentRepository
+
+Fouad:
+    Defines, Utility
+    
 ## Completion Outline:
 
 ### 1.a - (5%)
