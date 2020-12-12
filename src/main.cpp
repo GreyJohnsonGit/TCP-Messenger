@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
             throw "Command should be: tb.exe <peerId>";
         int peerId = strtol(argv[1], nullptr, 10);
 
-        Defines defines("Common0.cfg");
-        PeerInfo peerInfo("PeerInfo0.cfg", &defines);
+        Defines defines("Common.cfg");
+        PeerInfo peerInfo("PeerInfo.cfg", &defines);
         FragmentRepository fragmentRepository(&defines);
         Profiler profiler(&peerInfo);
         Server server(peerId, &peerInfo, &defines, &fragmentRepository);
