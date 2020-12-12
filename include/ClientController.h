@@ -22,9 +22,9 @@ namespace TorrentialBits {
             PeerInfo *peer;
             Defines *defines;
             FragmentRepository *fragmentRepository;
-            int clientFileDescriptor;
             int clientId;
             int remotePeerId;
+            int clientFileDescriptor;
     };
 }
 

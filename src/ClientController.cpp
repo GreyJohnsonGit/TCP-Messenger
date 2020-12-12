@@ -95,14 +95,14 @@ void ClientController::SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, i
         if (!peer->GetPieceStatus(clientId, i)) {
             for (size_t j = 1001; j < peer->GetPeerNetworkSize() + 1001; j++) {
 
-                if (clientId != j && peer->GetPieceStatus(j, i)) {
+                if (clientId != (int) j && peer->GetPieceStatus(j, i)) {
                     std::vector<char> request = GenerateResponse(MessageType::request,
                                                                  fragmentRepository->GetFragment(remotePeerId, i));
                     if (send(clientFileDescriptor, request.data(), request.size(), 0) == -1)
                         throw "Socket Send Failed";
 
                     std::vector<char> response(defines->GetPieceSize() + 32);
-                    if (read(clientFileDescriptor, response.data(), response.size() == -1))
+                    if (read(clientFileDescriptor, response.data(), response.size() == (size_t) -1))
                         throw "Socket Read Failed";
 
                     uint32_t length = Utility::UintToCharVector(
@@ -123,7 +123,7 @@ void ClientController::SendNotInterestedMessage(PeerInfo *peer, int clientId, in
 
     for (size_t j = 1001; j < peer->GetPeerNetworkSize() + 1001; j++) {
 
-        if (clientId != j && peer->GetPieceStatus(j, i)) {
+        if (clientId != (int) j && peer->GetPieceStatus(j, i)) {
             std::vector<char> emptyVector;
             std::vector<char> request = GenerateResponse(MessageType::disinterested, emptyVector);
             if (send(clientFileDescriptor, request.data(), request.size(), 0) == -1)
