@@ -6,6 +6,7 @@
 using namespace TorrentialBits;
 
 void ClientController::Startup() {
+    if(peer->IsInteresting(clientId, remotePeerId)) {
 
     } else {
         if(peer->HasFile(clientId)) {
