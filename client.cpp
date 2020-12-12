@@ -8,7 +8,7 @@
 #include <netdb.h> 
 #include <iostream>
 #include <vector>
-#define PORT 6008
+#define PORT 6009
 #define ALLOWED_SOCKET_CONNECTIONS 3
 #define BUFFER_SIZE 1024
 

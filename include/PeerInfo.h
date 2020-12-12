@@ -10,7 +10,7 @@
 namespace TorrentialBits {
     class PeerInfo {
         public:
-            PeerInfo(std::string fileName, Defines& defines);
+            PeerInfo(std::string fileName, Defines* _defines);
 
             bool GetPieceStatus(int peerId, uint32_t index);
             bool HasFile(int peerId);
@@ -22,6 +22,7 @@ namespace TorrentialBits {
             const std::vector<char>& GetBitField(int peerId);
             size_t GetDataSent(int peerId);
             double GetDataRate(int peerId);
+            bool IsFileDistributed();
 
             void SetPieceStatus(int peerId, uint32_t index, bool hasPiece);
             void SetChoke(int senderId, int recieverId, bool choke);
@@ -42,6 +43,7 @@ namespace TorrentialBits {
                 size_t dataSent;
                 double dataRate;
             };
+            Defines* defines;
             std::map<int, PeerInfoData> peers;
             std::mutex entryMutex;
     };
