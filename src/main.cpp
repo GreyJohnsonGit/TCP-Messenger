@@ -33,28 +33,6 @@ int main(int argc, char *argv[]) {
         server.End();
         
         fragmentRepository.DeleteFragments(peerId);
-        /*
-        Defines defines = Defines("Common.cfg");
-        std::vector<PeerClient> peerClients = PeerClient::CreatePeersFromFile("PeerInfo0.cfg", &defines);
-
-        PeerClient peer = PeerClient::GetPeer(peerId, peerClients);
-
-        Server *peerServer = new Server(peer);
-        std::thread serverThread = peerServer->SpawnThread();
-
-        //TODO: Handle all choking/unchoking logic
-
-        for(PeerClient previousPeer : peerClients) {
-            std::cout << "Trying to create a client, current peer is: " << peerId << " and the previous is: " << previousPeer.GetPeerId() << "with listening port: " << previousPeer.GetListeningPort() << std::endl;
-            if(previousPeer.GetPeerId() == peerId) break;
-
-
-            Client *client = new Client(peer, previousPeer);
-            client->Connect();
-        }
-
-        serverThread.join();
-        */
     }
     catch(const char* message) {
         std::cout << message << std::endl;
