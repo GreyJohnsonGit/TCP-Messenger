@@ -78,11 +78,9 @@ std::vector<char> ServerController::Bitfield(std::vector<char> &request)  {
 }
 
 std::vector<char> ServerController::Request(std::vector<char> &request)  {
-    Logger logger;
     std::vector<char> requestPayload;
     requestPayload.insert(requestPayload.end(), request.begin() + 5, request.begin() + 9);
     uint32_t pieceIndex = Utility::UintToCharVector(requestPayload);
-
     return GenerateResponse(MessageType::piece, fragmentRepository->GetFragment(serverId, pieceIndex));
 }
 
