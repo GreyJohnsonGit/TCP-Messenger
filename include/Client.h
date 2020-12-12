@@ -4,19 +4,24 @@
 #include <vector>
 #include <string>
 #include <thread>
-#include "PeerClient.h"
+#include "PeerInfo.h"
 
 namespace TorrentialBits {
     class Client {
         public:
-            Client(PeerClient _peer, PeerClient _remotePeer) : peer(_peer), remotePeer(_remotePeer) {}
-            void Connect();
+            Client(PeerInfo *_peer, int _remotePeerPort, int peerId) : peer(_peer), remotePeerPort(_remotePeerPort), clientId(peerId) {}
+            void Start();
+            void End();
+            void StartBackgroundClient();
             void Disconnect();
 
         private:
-            PeerClient peer;
-            PeerClient remotePeer;
+            PeerInfo *peer;
+            int remotePeerPort;
+            int clientId;
             int fileDescriptor;
+            std::thread primaryThread;
+            bool shutdownSignal;
     };
 }
 #endif
