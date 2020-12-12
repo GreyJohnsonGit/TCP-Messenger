@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "ClientController.h"
 #include "PeerInfo.h"
+#include "Utility.h"
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
@@ -53,9 +54,15 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
         if (connect(clientFileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
             throw "Failed to Connect";
 
-        //TODO: Send Handshake correctly
-        std::string message = "This is a handshake from: " + package.clientId;
-        if (send(clientFileDescriptor, message.c_str(), message.length() + 1, 0) == -1)
+        std::vector<char> handshakeMessage;
+        std::string header = "P2PFILESHARINGPROJ";
+        std::vector<char> zeros(10, 0);
+        std::vector<char> peerIdVector = Utility::UintToCharVector(package.clientId);
+        handshakeMessage.insert(handshakeMessage.end(), header.begin(), header.end());
+        handshakeMessage.insert(handshakeMessage.end(), zeros.begin(), zeros.end());
+        handshakeMessage.insert(handshakeMessage.end(), peerIdVector.begin(), peerIdVector.end());
+
+        if (send(clientFileDescriptor, handshakeMessage.data(), handshakeMessage.size(), 0) == -1)
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
