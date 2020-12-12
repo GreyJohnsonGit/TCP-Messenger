@@ -9,7 +9,7 @@
 namespace TorrentialBits {
     class Client {
         public:
-            Client(PeerInfo *_peer, int _remotePeerPort, int peerId) : peer(_peer), remotePeerPort(_remotePeerPort), clientId(peerId) {}
+            Client(PeerInfo *_peer, int _remotePeerPort, int peerId, int _remotePeerId) : peer(_peer), remotePeerPort(_remotePeerPort), clientId(peerId), remotePeerId(_remotePeerId) {}
             void Start();
             void End();
 
@@ -19,15 +19,17 @@ namespace TorrentialBits {
             int clientId;
             std::thread primaryThread;
             bool shutdownSignal;
+            int remotePeerId;
             struct ClientDataPackage {
                 int fileDescriptor;
+                int remotePeerId;
                 int clientId;
                 int remotePeerPort;
                 bool *shutdownSignal;
                 PeerInfo *peer;
             };
 
-        static void StartBackgroundClient();
+        static void StartBackgroundClient(ClientDataPackage package);
     };
 }
 #endif

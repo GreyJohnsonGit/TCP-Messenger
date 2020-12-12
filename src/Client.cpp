@@ -24,11 +24,11 @@ using namespace TorrentialBits;
 
 void Client::Start() {
     ClientDataPackage package;
-    primaryThread = std::thread(StartBackgroundClient);
     package.clientId = clientId;
     package.shutdownSignal = &shutdownSignal;
     package.peer = peer;
     package.remotePeerPort = remotePeerPort;
+    primaryThread = std::thread(StartBackgroundClient, package);
 }
 
 void Client::End() {
@@ -36,7 +36,7 @@ void Client::End() {
     primaryThread.join();
 }
 
-void Client::StartBackgroundClient() {
+void Client::StartBackgroundClient(ClientDataPackage package) {
     try{
         int clientFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
         if (clientFileDescriptor == -1)
@@ -49,18 +49,18 @@ void Client::StartBackgroundClient() {
         struct sockaddr_in serverAddress = {};
         serverAddress.sin_family = AF_INET;
         bcopy((char*)server->h_addr, (char*)&serverAddress.sin_addr.s_addr, server->h_length);
-        serverAddress.sin_port = htons(remotePeerPort);
+        serverAddress.sin_port = htons(package.remotePeerPort);
         if (connect(clientFileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
             throw "Failed to Connect";
 
         //TODO: Send Handshake correctly
-        std::string message = "This is a handshake from: " + clientId;
+        std::string message = "This is a handshake from: " + package.clientId;
         if (send(clientFileDescriptor, message.c_str(), message.length() + 1, 0) == -1)
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
-        ClientController clientController = new ClientController(PeerInfo *peer);
-        while(!*shutdownSignal) {
+        ClientController clientController = ClientController(package.peer, package.clientId, package.remotePeerId);
+        while(!*package.shutdownSignal) {
             clientController.Startup();
         }
 

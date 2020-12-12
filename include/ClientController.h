@@ -10,12 +10,14 @@
 namespace TorrentialBits {
     class ClientController {
         public:
-        ClientController(PeerInfo *_peer) : peer(_peer){}
-        void Startup();
+            ClientController(PeerInfo *_peer, int _clientId, int _remotePeerId) : peer(_peer), clientId(_clientId), remotePeerId(_remotePeerId) {}
+            void Startup();
 
 
         private:
             PeerInfo *peer;
+            int clientId;
+            int remotePeerId;
     };
 }
 
