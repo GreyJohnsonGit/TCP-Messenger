@@ -33,8 +33,8 @@ int main() {
             throw "Failed to Connect";
 
         std::vector<char> hndshk(32, 0);
-        hndshk[30] = 3;
-        hndshk[30] = 234;
+        hndshk[30] = 4;
+        hndshk[31] = 234;
         if (write(clientFileDescriptor, hndshk.data(), hndshk.size()) == -1)
             throw "Failed to Write Message";
 

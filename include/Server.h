@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <thread>
+#include <netinet/in.h> 
 
 namespace TorrentialBits {
     class Server {
@@ -22,6 +23,19 @@ namespace TorrentialBits {
             FragmentRepository *fragmentRepository;
             std::thread primaryThread;
             bool shutdownSignal;
+
+            struct ServerDataPackage {
+                int serverId;
+                int serverFileDescriptor;
+                bool *shutdownSignal;
+                PeerInfo *peerInfo;
+                Defines *defines;
+                FragmentRepository *fragmentRepository;
+                struct sockaddr_in address;   
+            };
+
+            static void StartBackgroundServer(ServerDataPackage package);
+            static void HandleConnection(ServerDataPackage package);
     };
 }
 #endif

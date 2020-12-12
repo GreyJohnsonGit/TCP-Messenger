@@ -6,6 +6,7 @@
 #include "PeerInfo.h"
 #include "FragmentRepository.h"
 #include "ServerController.h"
+#include "Logger.h"
 #include <iostream>
 #include <string>
 #include <thread>
@@ -22,7 +23,7 @@ int main(int argc, char *argv[]) {
         Defines defines("Common0.cfg");
         PeerInfo peerInfo("PeerInfo0.cfg", defines);
         FragmentRepository fragmentRepository(&defines);
-        
+
         if (peerInfo.HasFile(peerId))
             fragmentRepository.CreateFragments(peerId);
 
