@@ -1,7 +1,7 @@
 #include "Defines.h"
 #include "Utility.h"
 #include "Server.h"
-//#include "Client.h"
+#include "Profiler.h"
 #include "PeerInfo.h"
 #include "FragmentRepository.h"
 #include "ServerController.h"
@@ -20,18 +20,28 @@ int main(int argc, char *argv[]) {
         int peerId = strtol(argv[1], nullptr, 10);
 
         Defines defines("Common0.cfg");
-        PeerInfo peerInfo("PeerInfo0.cfg", defines);
+        PeerInfo peerInfo("PeerInfo0.cfg", &defines);
         FragmentRepository fragmentRepository(&defines);
+        Profiler profiler(&peerInfo);
+        Server server(peerId, &peerInfo, &defines, &fragmentRepository);
 
         if (peerInfo.HasFile(peerId))
             fragmentRepository.CreateFragments(peerId);
 
-        Server server(peerId, &peerInfo, &defines, &fragmentRepository);
-
         server.Start();
+        profiler.Start();
+
+        while (!peerInfo.IsFileDistributed()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+
+        profiler.End();
         server.End();
         
+        if (!peerInfo.HasFile(peerId))
+            fragmentRepository.MergeFragments(peerId);
         fragmentRepository.DeleteFragments(peerId);
+
     }
     catch(const char* message) {
         std::cout << message << std::endl;
