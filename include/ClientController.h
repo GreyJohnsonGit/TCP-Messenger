@@ -14,16 +14,15 @@ namespace TorrentialBits {
 
             void Startup();
             std::vector<char> GenerateResponse(MessageType type, std::vector<char> payload);
-            static void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
-            static void SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId);
+            void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
+            void SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId);
 
         private:
             PeerInfo *peer;
             Defines *defines;
-            int clientFileDescriptor;
             int clientId;
             int remotePeerId;
-
+            int clientFileDescriptor;
 
     };
 }

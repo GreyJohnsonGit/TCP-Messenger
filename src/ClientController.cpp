@@ -2,6 +2,8 @@
 #include "Utility.h"
 #include <string>
 #include <vector>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <algorithm>
 
 using namespace TorrentialBits;
@@ -24,6 +26,8 @@ void ClientController::Startup() {
 
     size_t bitFieldSize = (defines->GetPieceCount() / 8) + (defines->GetPieceCount() % 8 ? 1 : 0);
     SendRequestMessage(peer, bitFieldSize, clientId);
+
+
 
 
 //    std::vector<char> response = controller.ProcessRequest(buffer);
@@ -54,15 +58,23 @@ void ClientController::ChokeOrUnchokePeers(std::map<int, bool> interestedTable, 
 
     for(int unchokedPeerId : unchokedPeers) {
         if(std::find(preferableNeighbors.begin(), preferableNeighbors.end(), unchokedPeerId) == preferableNeighbors.end()) {
-            //TODO: Send choke message
-            //TODO: Choke peer
+            std::vector<char> payload;
+            std::vector<char> response = GenerateResponse(MessageType::choke, payload);
+            if (send(clientFileDescriptor, response.data(), response.size(), 0) == -1)
+                throw "Socket Send Failed";
+
+            peer->SetChoke(clientId, remotePeerId, true);
         }
     }
 
     for(int preferredNeighbor : preferableNeighbors) {
         if(std::find(unchokedPeers.begin(), unchokedPeers.end(), preferredNeighbor) == unchokedPeers.end()) {
-            //TODO: Send unchoke message
-            //TODO: Unchoke peer
+            std::vector<char> payload;
+            std::vector<char> response = GenerateResponse(MessageType::choke, payload);
+            if (send(clientFileDescriptor, response.data(), response.size(), 0) == -1)
+                throw "Socket Send Failed";
+
+            peer->SetChoke(clientId, remotePeerId, false);
         }
     }
 }
@@ -73,7 +85,7 @@ void ClientController::SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, i
         if(!peer->GetPieceStatus(clientId, i)) {
             for(size_t j=1001; j < peer->GetPeerNetworkSize() + 1001; j++) {
 
-                if(clientId != j && peer->GetPieceStatus(j, i)) {
+                if(clientId != (int) j && peer->GetPieceStatus(j, i)) {
                     //TODO: SEND
                     return;
                 }
