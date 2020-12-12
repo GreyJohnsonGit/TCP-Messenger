@@ -2,15 +2,15 @@
 
 ## Accreditation:
 
-Dakota:
+**Dakota:**
     Client, ClientController
 
-Grey:
+**Grey:**
     Server, ServerController, PeerInfo, MessageType, Logger, Profiler, FragmentRepository
 
-Fouad:
+**Fouad:**
     Defines, Utility
-    
+
 ## Completion Outline:
 
 ### 1.a - (5%)
