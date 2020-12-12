@@ -12,16 +12,22 @@ namespace TorrentialBits {
             Client(PeerInfo *_peer, int _remotePeerPort, int peerId) : peer(_peer), remotePeerPort(_remotePeerPort), clientId(peerId) {}
             void Start();
             void End();
-            void StartBackgroundClient();
-            void Disconnect();
 
         private:
             PeerInfo *peer;
             int remotePeerPort;
             int clientId;
-            int fileDescriptor;
             std::thread primaryThread;
             bool shutdownSignal;
+            struct ClientDataPackage {
+                int fileDescriptor;
+                int clientId;
+                int remotePeerPort;
+                bool *shutdownSignal;
+                PeerInfo *peer;
+            };
+
+        static void StartBackgroundClient();
     };
 }
 #endif
