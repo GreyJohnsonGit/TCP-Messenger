@@ -1,7 +1,7 @@
 #include "Defines.h"
 #include "Utility.h"
 #include "Server.h"
-//#include "Client.h"
+#include "Profiler.h"
 #include "PeerInfo.h"
 #include "FragmentRepository.h"
 #include "ServerController.h"
@@ -22,13 +22,16 @@ int main(int argc, char *argv[]) {
         Defines defines("Common0.cfg");
         PeerInfo peerInfo("PeerInfo0.cfg", defines);
         FragmentRepository fragmentRepository(&defines);
+        Profiler profiler(&peerInfo);
+        Server server(peerId, &peerInfo, &defines, &fragmentRepository);
 
         if (peerInfo.HasFile(peerId))
             fragmentRepository.CreateFragments(peerId);
 
-        Server server(peerId, &peerInfo, &defines, &fragmentRepository);
-
         server.Start();
+        profiler.Start();
+
+        profiler.End();
         server.End();
         
         fragmentRepository.DeleteFragments(peerId);
