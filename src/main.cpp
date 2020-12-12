@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         
         if (!peerInfo.HasFile(peerId))
             fragmentRepository.MergeFragments(peerId);
-        fragmentRepository.DeleteFragments();
+        fragmentRepository.DeleteFragments(peerId);
 
     }
     catch(const char* message) {
