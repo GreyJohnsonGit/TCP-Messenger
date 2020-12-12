@@ -24,7 +24,7 @@ namespace TorrentialBits {
             int clientFileDescriptor;
             int clientId;
             int remotePeerId;
-
+            int clientFileDescriptor;
 
     };
 }

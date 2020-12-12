@@ -39,6 +39,15 @@ void Client::End() {
     primaryThread.join();
 }
 
+std::vector<char> GenerateResponse(MessageType type, std::vector<char> payload) {
+    std::vector<char> response;
+    std::vector<char> messageLength = Utility::UintToCharVector(payload.size() + sizeof(type));
+    response.insert(response.end(), messageLength.begin(), messageLength.end());
+    response.push_back(type);
+    response.insert(response.end(), payload.begin(), payload.end());
+    return response;
+}
+
 void Client::StartBackgroundClient(ClientDataPackage package) {
     try{
         int clientFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
@@ -66,6 +75,12 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
 
         if (send(clientFileDescriptor, handshakeMessage.data(), handshakeMessage.size(), 0) == -1)
             throw "Socket Send Failed";
+
+
+        std::vector<char> payload(package.peer->GetBitField(package.clientId).begin(), package.peer->GetBitField(package.clientId).end());
+        std::vector<char> response = GenerateResponse(MessageType::bitfield, payload);
+        if (send(clientFileDescriptor, response.data(), response.size(), 0) == -1)
+            throw "Bitfield send failed";
 
         //TODO: PeerToPeerController thread
         ClientController clientController = ClientController(package.peer, package.defines, package.fragmentRepository, package.clientId, package.remotePeerId, clientFileDescriptor);
