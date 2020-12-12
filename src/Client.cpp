@@ -19,8 +19,8 @@
 
 using namespace TorrentialBits;
 
-Client::Client(PeerInfo *_peer, Defines *_defines, int _remotePeerPort, int peerId, int _remotePeerId) 
-    : peer(_peer), defines(_defines), remotePeerPort(_remotePeerPort), clientId(peerId), remotePeerId(_remotePeerId) {}
+Client::Client(PeerInfo *_peer, Defines *_defines, FragmentRepository *_fragmentRepository, int _remotePeerPort, int peerId, int _remotePeerId) 
+    : peer(_peer), defines(_defines), fragmentRepository(_fragmentRepository), remotePeerPort(_remotePeerPort), clientId(peerId), remotePeerId(_remotePeerId) {}
 
 
 void Client::Start() {
@@ -30,6 +30,7 @@ void Client::Start() {
     package.peer = peer;
     package.defines = defines;
     package.remotePeerPort = remotePeerPort;
+    package.fragmentRepository = fragmentRepository;
     primaryThread = std::thread(StartBackgroundClient, package);
 }
 
@@ -67,7 +68,7 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
-        ClientController clientController = ClientController(package.peer, package.defines, package.clientId, package.remotePeerId, clientFileDescriptor);
+        ClientController clientController = ClientController(package.peer, package.defines, package.fragmentRepository, package.clientId, package.remotePeerId, clientFileDescriptor);
         while(!*package.shutdownSignal) {
             clientController.Startup();
 

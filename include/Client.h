@@ -6,17 +6,19 @@
 #include <thread>
 #include "Defines.h"
 #include "PeerInfo.h"
+#include "FragmentRepository.h"
 
 namespace TorrentialBits {
     class Client {
         public:
-            Client(PeerInfo *_peer, Defines *_defines, int _remotePeerPort, int peerId, int _remotePeerId);
+            Client(PeerInfo *_peer, Defines *_defines, FragmentRepository *_fragmentRepository, int _remotePeerPort, int peerId, int _remotePeerId);
             void Start();
             void End();
 
         private:
             PeerInfo *peer;
             Defines *defines;
+            FragmentRepository *fragmentRepository;
             int remotePeerPort;
             int clientId;
             int remotePeerId;
@@ -31,6 +33,7 @@ namespace TorrentialBits {
                 bool *shutdownSignal;
                 Defines *defines;
                 PeerInfo *peer;
+                FragmentRepository *fragmentRepository;
             };
 
         static void StartBackgroundClient(ClientDataPackage package);

@@ -1,13 +1,25 @@
 #include "ClientController.h"
 #include "Utility.h"
+#include "MessageType.h"
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <vector>
+#include <unistd.h>
+#include <string.h>
+#include <thread>
+#include <chrono>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
 using namespace TorrentialBits;
 
-ClientController::ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId, int _clientFileDescriptor) :
-    peer(_peer), defines(_defines), clientId(_clientId), remotePeerId(_remotePeerId), clientFileDescriptor(_clientFileDescriptor) {}
+ClientController::ClientController(PeerInfo *_peer, Defines *_defines, FragmentRepository *_fragmentRepository, int _clientId, int _remotePeerId, int _clientFileDescriptor) :
+    peer(_peer), defines(_defines), fragmentRepository(_fragmentRepository), clientId(_clientId), remotePeerId(_remotePeerId), clientFileDescriptor(_clientFileDescriptor) {}
 
 
 void ClientController::Startup() {
@@ -74,12 +86,25 @@ void ClientController::SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, i
             for(size_t j=1001; j < peer->GetPeerNetworkSize() + 1001; j++) {
 
                 if(clientId != j && peer->GetPieceStatus(j, i)) {
-                    //TODO: SEND
-                    return;
+                    std::vector<char> request = GenerateResponse(MessageType::request, fragmentRepository->GetFragment(remotePeerId, i));
+                    if (send(clientFileDescriptor, request.data(), request.size(), 0) == -1)
+                        throw "Socket Send Failed";
+                    
+                    std::vector<char> response(defines->GetPieceSize() + 32);
+                    if (read(clientFileDescriptor, response.data(), response.size() == -1))
+                        throw "Socket Read Failed";
+                    
+                    uint32_t length = Utility::UintToCharVector(std::vector<char>(response.begin(), response.begin() + 4));
+                    response.resize(length + 4);
+
+                    fragmentRepository->PlaceFragment(clientId, i, response);
+                    break;
                 }
             }
         }
     }
+
+    // TODO SEND HAVE
 }
 
 std::vector<char> ClientController::GenerateResponse(MessageType type, std::vector<char> payload) {

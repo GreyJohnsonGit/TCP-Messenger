@@ -10,16 +10,17 @@
 namespace TorrentialBits {
     class ClientController {
         public:
-            ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId, int _clientFileDescriptor);
+            ClientController(PeerInfo *_peer, Defines *_defines, FragmentRepository *_fragmentRepository, int _clientId, int _remotePeerId, int _clientFileDescriptor);
 
             void Startup();
             std::vector<char> GenerateResponse(MessageType type, std::vector<char> payload);
-            static void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
-            static void SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId);
+            void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
+            void SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId);
 
         private:
             PeerInfo *peer;
             Defines *defines;
+            FragmentRepository *fragmentRepository;
             int clientFileDescriptor;
             int clientId;
             int remotePeerId;
