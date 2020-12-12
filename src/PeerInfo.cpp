@@ -39,6 +39,8 @@ PeerInfo::PeerInfo(std::string fileName, Defines& defines) {
         else {
             data.bitField = std::vector<char>(bitFieldSize, 0);
         }
+        data.dataRate = 0;
+        data.dataSent = 0;
         peers[peerId] = data;
     }
     file.close();
@@ -90,6 +92,16 @@ const std::vector<char>& PeerInfo::GetBitField(int peerId) {
     return peers[peerId].bitField;
 }
 
+size_t PeerInfo::GetDataSent(int peerId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    return peers[peerId].dataSent;
+}
+
+double PeerInfo::GetDataRate(int peerId) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    return peers[peerId].dataRate;
+}
+
 void PeerInfo::SetPieceStatus(int peerId, uint32_t index, bool hasPiece) {
     std::lock_guard<std::mutex> gaurd(entryMutex);
     char &byte = peers[peerId].bitField[index / 8];
@@ -113,4 +125,19 @@ void PeerInfo::SetInterested(int senderId, int recieverId, bool interested) {
 void PeerInfo::SetBitField(int senderId, std::vector<char> bitField) {
     std::lock_guard<std::mutex> gaurd(entryMutex);
     peers[senderId].bitField = bitField;
+}
+
+void PeerInfo::SetDataSent(int peerId, size_t data) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    peers[peerId].dataSent = data;
+}
+
+void PeerInfo::AddDataSent(int peerId, size_t data) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    peers[peerId].dataSent = peers[peerId].dataSent + data;
+}
+
+void PeerInfo::SetDataRate(int peerId, double rate) {
+    std::lock_guard<std::mutex> gaurd(entryMutex);
+    peers[peerId].dataRate = rate;
 }
