@@ -8,13 +8,9 @@
 #include <netinet/in.h>
 #include <vector>
 #include <unistd.h>
-#include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/types.h>
 #include <thread>
+#include <chrono>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -71,9 +67,11 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
-        ClientController clientController = ClientController(package.peer, package.defines, package.clientId, package.remotePeerId);
+        ClientController clientController = ClientController(package.peer, package.defines, package.clientId, package.remotePeerId, clientFileDescriptor);
         while(!*package.shutdownSignal) {
             clientController.Startup();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
 
         close(clientFileDescriptor);

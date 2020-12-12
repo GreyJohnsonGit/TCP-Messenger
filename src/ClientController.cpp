@@ -6,18 +6,29 @@
 
 using namespace TorrentialBits;
 
-ClientController::ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId) :
-    peer(_peer), defines(_defines), clientId(_clientId), remotePeerId(_remotePeerId) {}
+ClientController::ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId, int _clientFileDescriptor) :
+    peer(_peer), defines(_defines), clientId(_clientId), remotePeerId(_remotePeerId), clientFileDescriptor(_clientFileDescriptor) {}
 
 
 void ClientController::Startup() {
     if(peer->IsInteresting(clientId, remotePeerId)) {
-
+        //TODO: set download rate stuff
     } else {
         if(peer->HasFile(clientId)) {
             ChokeOrUnchokePeers(peer->GetInterestedTable(clientId), defines->GetNumberOfPreferredNeighbors(), clientId, remotePeerId, peer);
+        } else {
+            //TODO: Push to start
+            ChokeOrUnchokePeers(peer->GetInterestedTable(clientId), defines->GetNumberOfPreferredNeighbors(), clientId, remotePeerId, peer);
         }
     }
+
+    size_t bitFieldSize = (defines->GetPieceCount() / 8) + (defines->GetPieceCount() % 8 ? 1 : 0);
+    SendRequestMessage(peer, bitFieldSize, clientId);
+
+
+//    std::vector<char> response = controller.ProcessRequest(buffer);
+//    if (response.size() != 0 && send(newSocket, response.data(), response.size(), 0) == -1)
+//        throw "Socket Send Failed";
 
 }
 
@@ -54,4 +65,28 @@ void ClientController::ChokeOrUnchokePeers(std::map<int, bool> interestedTable, 
             //TODO: Unchoke peer
         }
     }
+}
+
+void ClientController::SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId) {
+    for(size_t i =0; i < bitFieldSize; i++) {
+
+        if(!peer->GetPieceStatus(clientId, i)) {
+            for(size_t j=1001; j < peer->GetPeerNetworkSize() + 1001; j++) {
+
+                if(clientId != j && peer->GetPieceStatus(j, i)) {
+                    //TODO: SEND
+                    return;
+                }
+            }
+        }
+    }
+}
+
+std::vector<char> ClientController::GenerateResponse(MessageType type, std::vector<char> payload) {
+    std::vector<char> response;
+    std::vector<char> messageLength = Utility::UintToCharVector(payload.size() + sizeof(type));
+    response.insert(response.end(), messageLength.begin(), messageLength.end());
+    response.push_back(type);
+    response.insert(response.end(), payload.begin(), payload.end());
+    return response;
 }
