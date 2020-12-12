@@ -113,6 +113,7 @@ bool PeerInfo::IsFileDistributed() {
                 return false;
         }
     }
+    return true;
 }
 
 void PeerInfo::SetPieceStatus(int peerId, uint32_t index, bool hasPiece) {

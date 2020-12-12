@@ -2,8 +2,13 @@
 #include "Utility.h"
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace TorrentialBits;
+
+ClientController::ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId) :
+    peer(_peer), defines(_defines), clientId(_clientId), remotePeerId(_remotePeerId) {}
+
 
 void ClientController::Startup() {
     if(peer->IsInteresting(clientId, remotePeerId)) {
@@ -22,10 +27,10 @@ void ClientController::ChokeOrUnchokePeers(std::map<int, bool> interestedTable, 
     std::vector<int> preferableNeighbors;
     std::vector<int> unchokedPeers;
 
-    for(int i=1001; i < peer->GetPeerNetworkSize() + 1001; i++) {
+    for(size_t i = 1001; i < peer->GetPeerNetworkSize() + 1001; i++) {
         if(preferableNeighbors.size() >= preferableNumber)
             break;
-        if(peer->IsInteresting(clientId, i) && i != clientId)
+        if(peer->IsInteresting(clientId, i) && i != (size_t) clientId)
             preferableNeighbors.push_back(i);
     }
 
@@ -49,6 +54,4 @@ void ClientController::ChokeOrUnchokePeers(std::map<int, bool> interestedTable, 
             //TODO: Unchoke peer
         }
     }
-
-
 }

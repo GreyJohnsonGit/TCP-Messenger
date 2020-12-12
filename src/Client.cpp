@@ -23,6 +23,10 @@
 
 using namespace TorrentialBits;
 
+Client::Client(PeerInfo *_peer, Defines *_defines, int _remotePeerPort, int peerId, int _remotePeerId) 
+    : peer(_peer), defines(_defines), remotePeerPort(_remotePeerPort), clientId(peerId), remotePeerId(_remotePeerId) {}
+
+
 void Client::Start() {
     ClientDataPackage package;
     package.clientId = clientId;
@@ -67,7 +71,7 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
             throw "Socket Send Failed";
 
         //TODO: PeerToPeerController thread
-        ClientController clientController = ClientController(package.peer, package.clientId, package.remotePeerId, package.defines);
+        ClientController clientController = ClientController(package.peer, package.defines, package.clientId, package.remotePeerId);
         while(!*package.shutdownSignal) {
             clientController.Startup();
         }

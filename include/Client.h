@@ -10,18 +10,19 @@
 namespace TorrentialBits {
     class Client {
         public:
-            Client(PeerInfo *_peer, int _remotePeerPort, int peerId, int _remotePeerId, Defines *_defines) : peer(_peer), remotePeerPort(_remotePeerPort), clientId(peerId), remotePeerId(_remotePeerId), defines(_defines){}
+            Client(PeerInfo *_peer, Defines *_defines, int _remotePeerPort, int peerId, int _remotePeerId);
             void Start();
             void End();
 
         private:
             PeerInfo *peer;
+            Defines *defines;
             int remotePeerPort;
             int clientId;
-            Defines *defines;
+            int remotePeerId;
             std::thread primaryThread;
             bool shutdownSignal;
-            int remotePeerId;
+            
             struct ClientDataPackage {
                 int fileDescriptor;
                 int remotePeerId;

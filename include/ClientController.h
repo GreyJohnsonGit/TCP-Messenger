@@ -10,16 +10,16 @@
 namespace TorrentialBits {
     class ClientController {
         public:
-            static void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
-            ClientController(PeerInfo *_peer, int _clientId, int _remotePeerId, Defines *_defines) : peer(_peer), clientId(_clientId), remotePeerId(_remotePeerId), defines(_defines) {}
-            void Startup();
+            ClientController(PeerInfo *_peer, Defines *_defines, int _clientId, int _remotePeerId);
 
+            void Startup();
+            static void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
 
         private:
             PeerInfo *peer;
+            Defines *defines;
             int clientId;
             int remotePeerId;
-            Defines *defines;
 
 
     };
