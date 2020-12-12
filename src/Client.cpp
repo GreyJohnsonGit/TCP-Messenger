@@ -62,8 +62,9 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
         serverAddress.sin_family = AF_INET;
         bcopy((char*)server->h_addr, (char*)&serverAddress.sin_addr.s_addr, server->h_length);
         serverAddress.sin_port = htons(package.remotePeerPort);
-        if (connect(clientFileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1)
-            throw "Failed to Connect";
+        while(connect(clientFileDescriptor, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        }
 
         std::vector<char> handshakeMessage;
         std::string header = "P2PFILESHARINGPROJ";
@@ -87,7 +88,7 @@ void Client::StartBackgroundClient(ClientDataPackage package) {
         while(!*package.shutdownSignal) {
             clientController.Startup();
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         }
 
         close(clientFileDescriptor);

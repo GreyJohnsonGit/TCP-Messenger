@@ -16,6 +16,7 @@ namespace TorrentialBits {
             std::vector<char> GenerateResponse(MessageType type, std::vector<char> payload);
             void ChokeOrUnchokePeers(std::map<int, bool> interestedTable, size_t preferableNumber, int clientId, int remotePeerId, PeerInfo *peer);
             void SendRequestMessage(PeerInfo *peer, size_t bitFieldSize, int clientId);
+            void SendNotInterestedMessage(PeerInfo *peer, int clientId, int i);
 
         private:
             PeerInfo *peer;
@@ -24,7 +25,6 @@ namespace TorrentialBits {
             int clientFileDescriptor;
             int clientId;
             int remotePeerId;
-
     };
 }
 
