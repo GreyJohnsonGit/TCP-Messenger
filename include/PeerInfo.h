@@ -13,6 +13,7 @@ namespace TorrentialBits {
             PeerInfo(std::string fileName, Defines* _defines);
 
             bool GetPieceStatus(int peerId, uint32_t index);
+            std::map<int, bool> GetInterestedTable(int peerId);
             bool HasFile(int peerId);
             bool IsChoking(int senderId, int recieverId);
             bool IsInteresting(int senderId, int recieverId);
