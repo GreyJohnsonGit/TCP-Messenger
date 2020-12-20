@@ -1,5 +1,5 @@
 CC = g++
-CPPFLAGS = -Iinclude -MMD -MP -pthread -std=c++2a
+CPPFLAGS = -Iinclude -MMD -MP -pthread -std=c++11
 CFLAGS = -g -Wall
 
 SRC_DIR = src
