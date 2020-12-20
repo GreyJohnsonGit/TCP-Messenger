@@ -58,7 +58,7 @@ void MessengerController::ReadMessage(std::string userName, int socketHandle, bo
             if (readResult == 0 || message == "q")
                 *terminateSignal = true;
             else
-                std::cout << message;
+                std::cout << message << std::flush;
             message = std::string(128, '\0');
         }
     }
