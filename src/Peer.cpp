@@ -18,7 +18,10 @@ void Peer::Start()
 {
     int socketHandle = AttemptClientConnection();
     if (socketHandle == -1)
+    {
+        std::cout << "Listening..." << std::endl;
         socketHandle = AttemptServerConnection();
+    }
     
     std::cout << "Connection Successful..." << std::endl;
 
@@ -43,12 +46,10 @@ int Peer::AttemptClientConnection()
     socketAddress.sin_port = htons(portNumber);
     bcopy((char*)server->h_addr, (char*)&socketAddress.sin_addr.s_addr, server->h_length);
 
-    struct pollfd connectionPoll = { socketHandle, POLLIN, 0};
-
-    if (poll(&connectionPoll, 1, 5000) && connect(socketHandle, (struct sockaddr*)&socketAddress, sizeof(socketAddress)) != -1)
+    if (connect(socketHandle, (struct sockaddr*)&socketAddress, sizeof(socketAddress)) == -1)
+        return  -1;
+    else
         return socketHandle;
-    
-    return  -1;
 }
 
 int Peer::AttemptServerConnection()
