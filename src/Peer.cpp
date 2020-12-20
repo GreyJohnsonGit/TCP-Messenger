@@ -29,7 +29,7 @@ int Peer::AttemptClientConnection()
     int socketHandle = socket(AF_INET, SOCK_STREAM, 0);
     if (socketHandle == -1)
         throw "Could not create socket";
-    
+
     struct hostent *server = gethostbyname(address.c_str());
     if (server == nullptr)
         throw "Unable to resolve server name";
