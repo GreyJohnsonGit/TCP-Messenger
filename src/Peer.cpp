@@ -6,6 +6,7 @@
 #include <netdb.h> 
 #include <string.h>
 #include <iostream>
+#include <poll.h>
 
 using namespace TorrentialBits;
 
@@ -42,10 +43,12 @@ int Peer::AttemptClientConnection()
     socketAddress.sin_port = htons(portNumber);
     bcopy((char*)server->h_addr, (char*)&socketAddress.sin_addr.s_addr, server->h_length);
 
-    if (connect(socketHandle, (struct sockaddr*)&socketAddress, sizeof(socketAddress)) == -1)
-        return  -1;
-    else
+    struct pollfd connectionPoll = { socketHandle, POLLIN, 0};
+
+    if (poll(&connectionPoll, 1, 5000) && connect(socketHandle, (struct sockaddr*)&socketAddress, sizeof(socketAddress)) != -1)
         return socketHandle;
+    
+    return  -1;
 }
 
 int Peer::AttemptServerConnection()
