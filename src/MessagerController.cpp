@@ -22,7 +22,6 @@ void MessengerController::Init(int socketHandle)
 
 void MessengerController::WriteMessage(std::string userName, int socketHandle, bool *terminateSignal) 
 {
-    try{
     struct pollfd consolePoll = { STDIN_FILENO, POLLIN, 0};
     std::string message;
     while (!*terminateSignal)
@@ -42,9 +41,7 @@ void MessengerController::WriteMessage(std::string userName, int socketHandle, b
             if (write(socketHandle, message.c_str(), message.size() + 1) == -1)
                 throw "Could not write :(";
         }
-        
     }
-    }catch(const char* msg){std::cout<<msg<<std::endl;}
 }
 
 void MessengerController::ReadMessage(std::string userName, int socketHandle, bool *terminateSignal) 
@@ -61,7 +58,7 @@ void MessengerController::ReadMessage(std::string userName, int socketHandle, bo
             if (readResult == 0 || message == "q")
                 *terminateSignal = true;
             else
-                std::cout << message << std::endl;
+                std::cout << message;
             message = std::string(128, '\0');
         }
     }
