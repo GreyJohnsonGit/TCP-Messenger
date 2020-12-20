@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <netdb.h> 
 #include <string.h>
+#include <iostream>
 
 using namespace TorrentialBits;
 
@@ -18,6 +19,8 @@ void Peer::Start()
     if (socketHandle == -1)
         socketHandle = AttemptServerConnection();
     
+    std::cout << "Connection Successful..." << std::endl;
+
     controller.Init(socketHandle);
 }
 
