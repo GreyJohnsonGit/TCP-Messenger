@@ -8,15 +8,17 @@
 
 using namespace TorrentialBits;
 
-Peer::Peer(std::string _address, uint16_t _portNumber)
-    : address(_address), portNumber(_portNumber)
+Peer::Peer(uint16_t _portNumber, std::string _address, IController &_controller)
+    : portNumber(_portNumber), address(_address), controller(_controller)
 {}
 
 void Peer::Start()
 {
-    int socket = AttemptClientConnection();
-    if (socket == -1)
-        socket = AttemptServerConnection();
+    int socketHandle = AttemptClientConnection();
+    if (socketHandle == -1)
+        socketHandle = AttemptServerConnection();
+    
+    controller.Init(socketHandle);
 }
 
 void Peer::End()
