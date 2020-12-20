@@ -38,7 +38,7 @@ void MessengerController::WriteMessage(std::string userName, int socketHandle, b
                 message = std::string("");
             }
 
-            message = userName + ": " + message;
+            message = userName + ": " + message + "\n";
             if (write(socketHandle, message.c_str(), message.size() + 1) == -1)
                 throw "Could not write :(";
         }
