@@ -1,17 +1,17 @@
-#ifndef PEER_H
-#define PEER_H
+#ifndef MESSENGERPEER_H
+#define MESSENGERPEER_H
 
 #include <IPeer.h>
 #include <IController.h>
 #include <string>
 #include <cstdint>
 
-namespace TorrentialBits
+namespace GMessenger
 {
-    class Peer : public IPeer
+    class MessengerPeer : public IPeer
     {
     public:
-        Peer(uint16_t _portNumber, std::string _address, IController &_controller);
+        MessengerPeer(uint16_t _portNumber, std::string _address, IController &_controller);
 
         void Start();
         void End();

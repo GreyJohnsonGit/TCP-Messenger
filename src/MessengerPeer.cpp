@@ -1,4 +1,4 @@
-#include <Peer.h>
+#include <MessengerPeer.h>
 #include <string>
 #include <cstdint>
 #include <sys/socket.h>
@@ -8,13 +8,13 @@
 #include <iostream>
 #include <poll.h>
 
-using namespace TorrentialBits;
+using namespace GMessenger;
 
-Peer::Peer(uint16_t _portNumber, std::string _address, IController &_controller)
+MessengerPeer::MessengerPeer(uint16_t _portNumber, std::string _address, IController &_controller)
     : portNumber(_portNumber), address(_address), controller(_controller)
 {}
 
-void Peer::Start()
+void MessengerPeer::Start()
 {
     int socketHandle = AttemptClientConnection();
     if (socketHandle == -1)
@@ -28,10 +28,12 @@ void Peer::Start()
     controller.Init(socketHandle);
 }
 
-void Peer::End()
-{}
+void MessengerPeer::End()
+{
+    
+}
 
-int Peer::AttemptClientConnection()
+int MessengerPeer::AttemptClientConnection()
 {
     int socketHandle = socket(AF_INET, SOCK_STREAM, 0);
     if (socketHandle == -1)
@@ -52,7 +54,7 @@ int Peer::AttemptClientConnection()
         return socketHandle;
 }
 
-int Peer::AttemptServerConnection()
+int MessengerPeer::AttemptServerConnection()
 {
     int socketHandle = socket(AF_INET, SOCK_STREAM, 0);
     if (socketHandle == -1)

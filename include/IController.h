@@ -4,7 +4,7 @@
 #include <string>
 #include <cstdint>
 
-namespace TorrentialBits
+namespace GMessenger
 {
     class IController
     {

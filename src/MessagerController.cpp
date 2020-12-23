@@ -5,7 +5,7 @@
 #include <thread>
 #include <poll.h>
 
-using namespace TorrentialBits;
+using namespace GMessenger;
 
 MessengerController::MessengerController(std::string _userName)
     : userName(_userName)

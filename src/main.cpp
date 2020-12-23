@@ -1,10 +1,10 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <Peer.h>
+#include <MessengerPeer.h>
 #include <MessengerController.h>
 
-using namespace TorrentialBits;
+using namespace GMessenger;
 
 int main(int argc, char** argv)
 {
@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     std::string name = std::string(argv[3]);
 
     IController *controller = new MessengerController(name);
-    IPeer *peer = new Peer(port, address, *controller);
+    IPeer *peer = new MessengerPeer(port, address, *controller);
     peer->Start();
     std::cout << "Exiting..." << std::endl;
     return 0;

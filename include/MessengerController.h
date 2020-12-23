@@ -4,7 +4,7 @@
 #include <IController.h>
 #include <string>
 
-namespace TorrentialBits
+namespace GMessenger
 {
     class MessengerController : public IController
     {
